@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('title')
-    اضافة قسم رئيسي
+    اضافة قسم
 @endsection
 @section('css')
 
@@ -55,22 +55,11 @@
                                             <option value="0">غير مفعل</option>
                                         </select>
                                     </div>
-
-                                    <div class="col-lg-6">
-                                        <label for="crater" class="form-label">  قسم في الصفحة الرئيسية  </label>
-                                        <select required name="main_page" class="form-control" id="crater" data-choices
-                                                data-choices-groups data-placeholder="Select Crater">
-                                            <option value=""> -- حدد   --</option>
-                                            <option value="1">نعم</option>
-                                            <option value="0">لا</option>
-                                        </select>
-
-                                    </div>
                                     <div class="col-lg-12">
                                         <div class="mb-0">
                                             <label for="description" class="form-label"> وصف القسم </label>
                                             <textarea required class="form-control bg-light-subtle" id="description"
-                                                      rows="7" name="description">{{old('name')}}</textarea>
+                                                      rows="7" name="description">{{old('description')}}</textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -84,19 +73,6 @@
                                 <div class="mb-3">
                                     <input required type="file" class="form-control" name="image" accept="image/*">
                                 </div>
-                                <!-- File Upload -->
-                                {{--                            <form action="https://techzaa.getappui.com/" method="post" class="dropzone" id="myAwesomeDropzone" data-plugin="dropzone" data-previews-container="#file-previews" data-upload-preview-template="#uploadPreviewTemplate">--}}
-                                {{--                                <div class="fallback">--}}
-                                {{--                                    <input name="file" type="file" multiple />--}}
-                                {{--                                </div>--}}
-                                {{--                                <div class="dz-message needsclick">--}}
-                                {{--                                    <i class="bx bx-cloud-upload fs-48 text-primary"></i>--}}
-                                {{--                                    <h3 class="mt-4">Drop your images here, or <span class="text-primary">click to browse</span></h3>--}}
-                                {{--                                    <span class="text-muted fs-13">--}}
-                                {{--                                                       1600 x 1200 (4:3) recommended. PNG, JPG and GIF files are allowed--}}
-                                {{--                                                  </span>--}}
-                                {{--                                </div>--}}
-                                {{--                            </form>--}}
                             </div>
                         </div>
                         <div class="card">

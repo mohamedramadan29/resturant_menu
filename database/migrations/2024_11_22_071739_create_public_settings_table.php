@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('public_settings', function (Blueprint $table) {
             $table->id();
+            $table->string('website_name')->default('اسم الموقع');
+            $table->string('website_logo')->nullable();
+            $table->string('website_short_desc')->nullable();
+            $table->string('website_description')->nullable();
+            $table->string('website_keywords')->nullable();
+            $table->tinyInteger('status')->default('1');
+
             $table->timestamps();
         });
     }

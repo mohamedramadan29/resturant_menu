@@ -34,21 +34,6 @@
                             <a href="{{url('admin/main-category/add')}}" class="btn btn-sm btn-primary">
                                 اضف قسم جديد <i class="ti ti-plus"></i>
                             </a>
-
-{{--                            <div class="dropdown">--}}
-{{--                                <a href="#" class="dropdown-toggle btn btn-sm btn-outline-light"--}}
-{{--                                   data-bs-toggle="dropdown" aria-expanded="false">--}}
-{{--                                    This Month--}}
-{{--                                </a>--}}
-{{--                                <div class="dropdown-menu dropdown-menu-end">--}}
-{{--                                    <!-- item-->--}}
-{{--                                    <a href="#!" class="dropdown-item">Download</a>--}}
-{{--                                    <!-- item-->--}}
-{{--                                    <a href="#!" class="dropdown-item">Export</a>--}}
-{{--                                    <!-- item-->--}}
-{{--                                    <a href="#!" class="dropdown-item">Import</a>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
                         </div>
 
 
@@ -64,9 +49,7 @@
                                             </div>
                                         </th>
                                         <th> اسم القسم</th>
-                                        <th> عدد الاقسام الفرعية</th>
                                         <th> الحالة</th>
-                                        <th> رئيسية  </th>
                                         <th> الصورة</th>
                                         <th> العمليات</th>
                                     </tr>
@@ -80,13 +63,8 @@
                                         <tr>
                                             <td>
                                                 {{$i++}}
-{{--                                                <div class="form-check">--}}
-{{--                                                    <input type="checkbox" class="form-check-input" id="customCheck2">--}}
-{{--                                                    <label class="form-check-label" for="customCheck2">&nbsp;</label>--}}
-{{--                                                </div>--}}
                                             </td>
                                             <td> {{$category['name']}} </td>
-                                            <td>Admin</td>
                                             <td>
                                                 @if($category['status'] == 1)
                                                     <span class="badge bg-success"> مفعل  </span>
@@ -94,21 +72,12 @@
                                                     <span class="badge bg-danger"> غير مفعل  </span>
                                                 @endif
                                             </td>
-                                            <td>
-                                                @if($category['main_page'] == 1)
-                                                    <span class="badge bg-success"> نعم  </span>
-                                                @else
-                                                    <span class="badge bg-danger"> لا  </span>
-                                                @endif
-                                            </td>
+
                                             <td>
                                                 <img class="img-thumbnail" src="{{asset('assets/uploads/category_images/'.$category['image'])}}" width="80" height="80px" alt="">
                                             </td>
                                             <td>
                                                 <div class="d-flex gap-2">
-                                                    <a href="{{url('admin/sub-categories/'.$category['id'])}}" class="btn btn-soft-primary btn-sm">
-                                                          الاقسام الفرعية
-                                                    </a>
                                                     <a href="{{url('admin/main-category/update/'.$category['id'])}}" class="btn btn-soft-primary btn-sm">
                                                         <iconify-icon icon="solar:pen-2-broken"
                                                                       class="align-middle fs-18"></iconify-icon>

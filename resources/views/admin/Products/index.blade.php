@@ -43,16 +43,10 @@
                                     <thead class="bg-light-subtle">
                                     <tr>
                                         <th style="width: 20px;">
-                                            <div class="form-check">
-                                                <input type="checkbox" class="form-check-input" id="customCheck1">
-                                                <label class="form-check-label" for="customCheck1"></label>
-                                            </div>
                                         </th>
                                         <th> اسم المنتج  </th>
-                                        <th> القسم الرئيسي   </th>
-                                        <th> سعر الشراء  </th>
-                                        <th> سعر البيع  </th>
-                                        <th> سعر التخفيض   </th>
+                                        <th> القسم   </th>
+                                        <th> السعر  </th>
                                         <th>  الصورة </th>
                                         <th>  العمليات</th>
                                     </tr>
@@ -68,8 +62,6 @@
                                             </td>
                                             <td><a href="{{url('admin/product/update/'.$product['slug'])}}"></a>  {{$product['name']}} </td>
                                             <td> {{$product['Main_Category']['name']}} </td>
-                                            <td> {{$product['price']}} </td>
-                                            <td> {{$product['price']}} </td>
                                             <td> {{$product['price']}} </td>
                                             <td>
                                                 <img class="img-thumbnail" src="{{asset('assets/uploads/product_images/'.$product['image'])}}" width="80" height="80px" alt="">

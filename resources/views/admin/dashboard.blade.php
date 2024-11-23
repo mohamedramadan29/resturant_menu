@@ -25,7 +25,7 @@
                                 </div> <!-- end col -->
                                 <div class="col-6 text-end">
                                     <p class="text-muted mb-0"> الطلبات </p>
-                                    <h3 class="text-dark mt-1 mb-0"> @php echo  count(\App\Models\front\Order::all()) @endphp  </h3>
+                                    <h3 class="text-dark mt-1 mb-0"> @php echo  count(\App\Models\admin\Order::all()) @endphp  </h3>
                                 </div> <!-- end col -->
                             </div> <!-- end row-->
                         </div> <!-- end card body -->
@@ -74,7 +74,7 @@
                                 </div> <!-- end col -->
                                 <div class="col-6 text-end">
                                     <p class="text-muted mb-0"> التصنيفات الرئيسية </p>
-                                    <h3 class="text-dark mt-1 mb-0"> @php echo count(\App\Models\admin\MainCategory::all()) @endphp </h3>
+                                    <h3 class="text-dark mt-1 mb-0"> @php echo count(\App\Models\admin\Category::all()) @endphp </h3>
                                 </div> <!-- end col -->
                             </div> <!-- end row-->
                         </div> <!-- end card body -->
