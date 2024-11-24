@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers\front;
+
 use App\Http\Controllers\Controller;
 use App\Http\Traits\Message_Trait;
 use App\Models\front\Cart;
@@ -54,11 +56,11 @@ class CartController extends Controller
             $cartItem->qty += $number;  // زيادة الكمية (يمكنك تعديلها حسب الحاجة)
             $cartItem->total_price = $cartItem->qty * $cartItem->price;  // تحديث السعر الإجمالي
             $cartItem->save();  // حفظ التحديثات
-            return $this->success_message(' تم تحديث المنتج في السلة  ');
-//            return response()->json([
-//                'message' => 'تم تحديث المنتج في السلة بنجاح',
-//                'cartCount' => Cart::where('session_id', $session_id)->count()  // إرسال العدد المحدث للسلة
-//            ]);
+            // return $this->success_message(' تم تحديث المنتج في السلة  ');
+            return response()->json([
+                'message' => 'تم تحديث المنتج في السلة بنجاح',
+                'cartCount' => Cart::where('session_id', $session_id)->count()  // إرسال العدد المحدث للسلة
+            ]);
         }
 
         // إذا لم يكن المنتج موجودًا في السلة، يتم إضافته
@@ -70,11 +72,11 @@ class CartController extends Controller
         $item->price = $price;
         $item->total_price = $number * $price;
         $item->save();
-        return $this->success_message(' تم اضافة المنتج الي السلة  ');
-//        return response()->json([
-//            'message' => 'تم إضافة المنتج للسلة بنجاح',
-//            'cartCount' => Cart::where('session_id', $session_id)->count()  // إرسال العدد المحدث للسلة
-//        ]);
+        //return $this->success_message(' تم اضافة المنتج الي السلة  ');
+        return response()->json([
+            'message' => 'تم إضافة المنتج للسلة بنجاح',
+            'cartCount' => Cart::where('session_id', $session_id)->count()  // إرسال العدد المحدث للسلة
+        ]);
     }
 
 
