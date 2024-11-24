@@ -122,16 +122,16 @@ class CartController extends Controller
         $cartItem = Cart::find($request->item_id); // إيجاد العنصر في السلة
         if ($cartItem) {
             $cartItem->qty = $request->quantity; // تحديث الكمية
+            $cartItem->total_price = $request->quantity * $cartItem['price'];
             $cartItem->save(); // حفظ التحديثات
 
             // حساب المجموع للمنتج الواحد
-            $itemTotal = $cartItem->qty * $cartItem->price;
+            $itemTotal = $cartItem['total_price'];
 
             // حساب المجموع الفرعي (Subtotal)
             $subtotal = Cart::getcartitems()->sum(function ($item) {
-                return $item['price'] * $item['qty'];
+                return $item['total_price'];
             });
-
             return response()->json([
                 'itemTotal' => $itemTotal,
                 'subtotal' => $subtotal

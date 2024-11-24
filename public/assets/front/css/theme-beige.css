@@ -5148,38 +5148,38 @@ hr.hr-primary {
     transform: translateY(0)
 }
 
-.cart-summary {
+.cart-summary1 {
     padding: 1.5rem
 }
 
-.cart-table {
+.cart-table1 {
     line-height: 1.25;
     width: 100%
 }
 
-.cart-table td, .cart-table th {
+.cart-table1 td, .cart-table1 th {
     vertical-align: middle;
     padding: 1rem 1.5rem;
     border-bottom: 1px solid #e0e0e0
 }
 
-.cart-table .title .name {
+.cart-table1 .title .name {
     font-weight: 500;
     display: block
 }
 
-.cart-table .price {
+.cart-table1 .price {
     font-weight: 500;
     text-align: right;
     width: 95px
 }
 
-.cart-table .actions {
+.cart-table1 .actions {
     white-space: nowrap;
     text-align: right
 }
 
-.cart-table .actions button {
+.cart-table1 .actions button {
     background-color: transparent;
     border: 0;
     outline: none;

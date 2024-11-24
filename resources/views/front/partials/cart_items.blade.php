@@ -1,72 +1,135 @@
 <div class="panel-cart-content cart-details">
-    <table class="cart-table1">
-        @php
-            $session_id = \Illuminate\Support\Facades\Session::get('session_id');
-         if (empty($session_id)) {
-             $session_id = Session::getId();
-             Session::put('session_id', $session_id);
-             Session::regenerate();
-         }
-             if (Auth::check()) {
-                   $user_id = Auth::user()->id;
-                   $cartItems = \App\Models\front\Cart::where(['user_id' => $user_id])->get();
-               } else {
-                   $user_id = 0;
-                   $cartItems = \App\Models\front\Cart::where('session_id', $session_id)
-                       ->get();
-               }
+    @php
+        $session_id = \Illuminate\Support\Facades\Session::get('session_id');
+        $cartItems = App\Models\front\Cart::getcartitems();
+        $total_price = 0;
+    @endphp
 
-        @endphp
-        @foreach($cartItems as $item)
-            <tr>
-                <td class="title">
-                  <span class="name"
-                  ><a href="#product-modal" data-toggle="modal"
-                      >Beef Burger</a
-                      ></span
-                  >
-                    <span class="caption text-muted">Large (500g)</span>
-                </td>
-                <td class="price">$9.00</td>
-                <td class="actions">
-                    <a
-                            href="#product-modal"
-                            data-toggle="modal"
-                            class="action-icon"
-                    ><i class="ti ti-pencil"></i
-                        ></a>
-                    <a href="#" class="action-icon"
-                    ><i class="ti ti-close"></i
-                        ></a>
-                </td>
-            </tr>
-        @endforeach
-    </table>
-    <div class="cart-summary">
-        <div class="row">
-            <div class="col-7 text-right text-muted"> مجموع المنتجات  :</div>
-            <div class="col-5">
-                <strong
-                >$<span class="cart-products-total">0.00</span></strong
-                >
+    @if ($cartItems->count() > 0)
+        <table class="cart-table1">
+            @foreach ($cartItems as $item)
+                @php
+                    $total_price = intval($total_price + $item['total_price']);
+                @endphp
+                <tr>
+                    <td class="title">
+                        <span class="name"><a href="#product-modal" data-toggle="modal"> {{ $item['name'] }} </a></span>
+                        <span class="caption text-muted"> {{ $item['productdata']['name'] }} </span>
+                    </td>
+                    <td class="price cart-total1" data-id="{{ $item['id'] }}"> {{ number_format($item['total_price'], 2) }} </td>
+                    <td class="actions">
+                        <a href="#product-modal" data-toggle="modal" class="action-icon"> <i
+                                class="bi bi-pencil-square"></i> </a>
+                        <a href="#" class="action-icon"><i class="bi bi-trash-fill"></i></a>
+                    </td>
+                </tr>
+                <div class="tf-mini-cart-btns">
+                    <div class="wg-quantity small">
+                        <span class="btn-quantity minus-btn" data-id="{{ $item['id'] }}">-</span>
+
+                        <input type="number" name="number" data-id="{{ $item['id'] }}" value="{{ $item['qty'] }}"
+                            min="1">
+
+                        <span class="btn-quantity plus-btn" data-id="{{ $item['id'] }}">+</span>
+                    </div>
+                    <form method="post" action="{{ url('cart/delete/' . $item['id']) }}">
+                        @csrf
+                        <input type="hidden" name="item_id" value="{{ $item['id'] }}">
+                        <button type="submit" class="tf-mini-cart-remove"><i class="bi bi-trash-fill"></i></button>
+                    </form>
+                </div>
+            @endforeach
+        </table>
+        <div class="cart-summary1">
+            <div class="row">
+                <div class="col-7 text-right text-muted"> المجموع الفرعي :</div>
+                <div class="col-5">
+                    <strong> <span class="cart-products-total1"> {{ number_format($total_price, 2) }} </span> ريال
+                    </strong>
+                </div>
+            </div>
+            {{-- <div class="row">
+                <div class="col-7 text-right text-muted">التوصيل :</div>
+                <div class="col-5">
+                    <strong>$<span class="cart-delivery">0.00</span></strong>
+                </div>
+            </div> --}}
+            <hr class="hr-sm" />
+            <div class="row text-lg">
+                <div class="col-7 text-right text-muted"> الاجمالي :</div>
+                <div class="col-5">
+                    <strong> <span class="cart-total1 total-value">{{ number_format($total_price, 2) }}</span> ريال </strong>
+                </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-7 text-right text-muted">التوصيل :</div>
-            <div class="col-5">
-                <strong>$<span class="cart-delivery">0.00</span></strong>
-            </div>
+    @else
+        <div class="cart-empty">
+            <i class="ti ti-shopping-cart"></i>
+            <p> سلة الشراء فارغة </p>
         </div>
-        <hr class="hr-sm"/>
-        <div class="row text-lg">
-            <div class="col-7 text-right text-muted">المجموع الكلي  :</div>
-            <div class="col-5">
-                <strong>$<span class="cart-total">0.00</span></strong>
-            </div>
-        </div>
-    </div>
-    <div class="cart-empty">
-        <i class="ti ti-shopping-cart"></i>
-        <p> سلة الشراء فارغة  </p>
-    </div>
+    @endif
 </div>
+
+
+<script>
+    $(document).ready(function() {
+        // زيادة الكمية عند الضغط على الزر +
+        $('.plus-btn').off('click').on('click', function(e) {
+            e.preventDefault(); // منع السلوك الافتراضي
+
+            let itemId = $(this).data('id');
+            let inputField = $('input[name="number"][data-id="' + itemId + '"]');
+            let newQuantity = parseInt(inputField.val()) + 1;
+            updateCart(itemId, newQuantity);
+        });
+
+        // نقصان الكمية عند الضغط على الزر -
+        $('.minus-btn').off('click').on('click', function(e) {
+            e.preventDefault(); // منع السلوك الافتراضي
+            let itemId = $(this).data('id');
+            let inputField = $('input[name="number"][data-id="' + itemId + '"]');
+            let newQuantity = parseInt(inputField.val()) - 1;
+            if (newQuantity > 0) {
+                updateCart(itemId, newQuantity);
+            }
+        });
+
+        // تحديث الكمية عند كتابة المستخدم كمية مباشرة في حقل الإدخال
+        $('input[name="number"]').off('input').on('input', function(e) {
+            let itemId = $(this).data('id');
+            let newQuantity = parseInt($(this).val());
+
+            // التأكد من أن القيمة المدخلة صحيحة وأن الكمية أكبر من 0
+            if (!isNaN(newQuantity) && newQuantity > 0) {
+                updateCart(itemId, newQuantity);
+            }
+        });
+
+        // تحديث الكمية في السلة
+        function updateCart(itemId, newQuantity) {
+            $.ajax({
+                url: '/cart/update',
+                method: 'POST',
+                data: {
+                    "_token": "{{ csrf_token() }}", // تأكيد الحماية ضد CSRF
+                    "item_id": itemId,
+                    "quantity": newQuantity
+                },
+                success: function(response) {
+                    // تحديث الكميات والأسعار بناءً على الاستجابة
+                    $('input[name="number"][data-id="' + itemId + '"]').val(newQuantity);
+
+                    // تحديث المجموع لكل منتج
+                    $('.cart-total1[data-id="' + itemId + '"]').text(response
+                        .itemTotal.toFixed(2));
+
+                    // تحديث المجموع الفرعي (Subtotal)
+                    $('.total-value').text(response.subtotal.toFixed(2));
+                },
+                error: function(xhr) {
+                    console.log('Error updating cart');
+                }
+            });
+        }
+    });
+</script>
