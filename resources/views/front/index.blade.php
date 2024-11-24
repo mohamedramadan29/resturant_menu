@@ -31,17 +31,16 @@
         <div class="page-content">
             <div class="container">
                 <div class="row no-gutters">
-                    <div class="col-md-3">
-                        <!-- Menu Navigation -->
-                        <nav id="menu-navigation" class="stick-to-content" data-local-scroll>
-                            <ul class="nav nav-menu bg-dark dark">
-                                @foreach ($categories as $category)
-                                    <li><a href="#{{ $category['slug'] }}">{{ $category['name'] }}</a></li>
-                                @endforeach
-                            </ul>
-                        </nav>
+
+                    <div class="col-12">
+                        <ul class="list-unstyled all_categories">
+                            @foreach ($categories as $category)
+                                <li><a href="#{{ $category['slug'] }}">{{ $category['name'] }}</a></li>
+                            @endforeach
+                        </ul>
                     </div>
-                    <div class="col-md-9">
+
+                    <div class="col-md-12">
                         @foreach ($categories as $category)
                             <!-- Category Details -->
                             <div id="{{ $category['slug'] }}" class="menu-category">
@@ -55,7 +54,7 @@
                                 <div class="menu-category-content padded">
                                     <div class="row gutters-sm">
                                         @foreach ($category['products'] as $product)
-                                            <div class="col-lg-4 col-6">
+                                            <div class="col-lg-3 col-6">
                                                 <!-- Menu Item -->
                                                 <div class="menu-item menu-grid-item">
                                                     <img class="mb-4"

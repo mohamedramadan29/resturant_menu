@@ -35,7 +35,8 @@ class CheckoutController extends Controller
         $phone = $request->input('phone');
 
         // إرسال رمز التحقق باستخدام خدمة مثل Twilio (يمكنك إضافة الخدمة هنا)
-        $verificationCode = rand(1000, 9999);
+        //$verificationCode = rand(1000, 9999);
+        $verificationCode = '0000';
 
         User::updateOrCreate([
             'phone' => $phone,

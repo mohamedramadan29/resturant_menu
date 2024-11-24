@@ -164,7 +164,7 @@
                 <form
                     action="#"
                     id="sign-up-form" class="sign-up-form validate-form mb-5" method="POST">
-                    <div class="input-group" style="flex-direction: row-reverse">
+                    <div class="input-group">
                         <input dir="rtl" name="EMAIL" id="mce-EMAIL" type="email" class="form-control"
                             placeholder=" البريد الالكتروني ...  " required />
                         <span class="input-group-btn">

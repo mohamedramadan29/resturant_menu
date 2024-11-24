@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Traits\Message_Trait;
+use App\Models\admin\admin;
 use App\Models\admin\Product;
 use App\Models\front\OrderDetail;
 use App\Models\User;
@@ -28,7 +29,7 @@ class OrderController extends Controller
     {
 
         $data = $request->all();
-        $user = User::where('phone',$data['phone'])->first();
+        $user = User::where('phone', $data['phone'])->first();
         // dd($data);
         $coupon_amount =  Session::has('coupon_amount') ? Session::get('coupon_amount') : 0;
         $coupon = Session::has('coupon_code') ? Session::get('coupon_code') : null;
@@ -93,8 +94,8 @@ class OrderController extends Controller
         //     $message->to($email)->subject(' لديك طلب جديد علي متجرك ');
         // });
         DB::commit();
-        //$admin = admins::all();
-        //  Notification::send($admin,new NewOrder($order->id));
+        $admin = admin::all();
+        Notification::send($admin, new NewOrder($order->id));
         Session::put('order_id', $order->id);
         return redirect('thanks');
         // return $this->success_message(' تم اضافة الطلب الخاص بك بنجاح  ');

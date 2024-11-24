@@ -41,8 +41,8 @@
                                         <th>  رقم الطلب   </th>
                                         <th>  اسم العميل  </th>
                                         <th>  رقم الهاتف   </th>
-                                        <th>  المدينة   </th>
-                                        <th> قيمة الشحن   </th>
+
+                                        {{-- <th> قيمة الشحن   </th> --}}
                                         <th>  الاجمالي   </th>
                                         <th> حالة الطلب  </th>
                                         <th>   العمليات</th>
@@ -56,8 +56,8 @@
                                             </td>
                                             <td>   {{$order['name']}} </td>
                                             <td> {{$order['phone']}} </td>
-                                            <td> {{$order['city']['city']}} </td>
-                                            <td> {{$order['shipping_price']}} </td>
+
+                                            {{-- <td> {{$order['shipping_price']}} </td> --}}
                                             <td> {{$order['grand_total']}} </td>
                                             <td>
                                                 @if($order['order_status'] == 'لم يبدا')
@@ -76,13 +76,13 @@
                                                         <iconify-icon icon="solar:pen-2-broken"
                                                                       class="align-middle fs-18"></iconify-icon>
                                                     </a>
-                                                    <a href="{{url('admin/order/print/'.$order['id'])}}" class="btn btn-soft-primary btn-sm">
+                                                    {{-- <a href="{{url('admin/order/print/'.$order['id'])}}" class="btn btn-soft-primary btn-sm">
                                                         <i class='bx bxs-printer'></i>
                                                     </a>
                                                     <button type="button" class="btn btn-soft-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delete_category_{{$order['id']}}">
                                                         <iconify-icon icon="solar:trash-bin-minimalistic-2-broken"
                                                                       class="align-middle fs-18"></iconify-icon>
-                                                    </button>
+                                                    </button> --}}
                                                 </div>
                                             </td>
                                         </tr>

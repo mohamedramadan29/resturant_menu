@@ -1,3 +1,6 @@
+@php
+ $public_setting = \App\Models\admin\PublicSetting::first();
+@endphp
 <!DOCTYPE html>
 <html lang="ar" dir="rtl"
 <head>
@@ -9,22 +12,22 @@
     <title> @yield('title') </title>
 
     <!-- Favicons -->
-    <link rel="shortcut icon" href="{{asset('assets/front/uploads/img/favicon.png')}}" />
-    <link rel="apple-touch-icon" href="{{asset('assets/front/uploads/img/favicon_60x60.png')}}" />
+    <link rel="shortcut icon" href="{{ asset('assets/uploads/PublicSetting/' . $public_setting->website_logo) }}" />
+    <link rel="apple-touch-icon" href="{{ asset('assets/uploads/PublicSetting/' . $public_setting->website_logo) }}" />
     <link
         rel="apple-touch-icon"
         sizes="76x76"
-        href="{{asset('assets/front/uploads/img/favicon_76x76.png')}}"
+        href="{{ asset('assets/uploads/PublicSetting/' . $public_setting->website_logo) }}"
     />
     <link
         rel="apple-touch-icon"
         sizes="120x120"
-        href="{{asset('assets/front/uploads/img/favicon_120x120.png')}}"
+        href="{{ asset('assets/uploads/PublicSetting/' . $public_setting->website_logo) }}"
     />
     <link
         rel="apple-touch-icon"
         sizes="152x152"
-        href="{{asset('assets/front/uploads/img/favicon_152x152.png')}}"
+        href="{{ asset('assets/uploads/PublicSetting/' . $public_setting->website_logo) }}"
     />
 
     <!-- Fonts -->
