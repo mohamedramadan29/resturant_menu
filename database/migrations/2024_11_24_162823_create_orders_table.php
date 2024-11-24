@@ -13,16 +13,18 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->integer('user_id')->nullable();
+            $table->string('session_id')->nullable();
             $table->string('name');
             $table->string('phone');
-            $table->string('location')->nullable();
             $table->text('notes')->nullable();
-            $table->double('tax',8,2);
-            $table->double('product_price',8,2);
-            $table->double('total_price',8,2);
-            $table->tinyInteger('status')->default(0);
-
+            $table->string('time_delivery')->nullable();
+            $table->string('payment_method');
+            $table->float('shipping_price')->nullable();
+            $table->string('coupon_code')->nullable();
+            $table->float('coupon_amount')->nullable();
+            $table->string('order_status')->default('لم يبدأ');
+            $table->decimal('grand_total','8','2');
             $table->timestamps();
         });
     }

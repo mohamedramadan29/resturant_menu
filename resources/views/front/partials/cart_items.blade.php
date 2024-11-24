@@ -16,49 +16,45 @@
                         <span class="name"><a href="#product-modal" data-toggle="modal"> {{ $item['name'] }} </a></span>
                         <span class="caption text-muted"> {{ $item['productdata']['name'] }} </span>
                     </td>
-                    <td class="price cart-total1" data-id="{{ $item['id'] }}"> {{ number_format($item['total_price'], 2) }} </td>
+                    <td class="price cart-total1" data-id="{{ $item['id'] }}">
+                        {{ number_format($item['total_price'], 2) }} </td>
                     <td class="actions">
-                        <a href="#product-modal" data-toggle="modal" class="action-icon"> <i
-                                class="bi bi-pencil-square"></i> </a>
-                        <a href="#" class="action-icon"><i class="bi bi-trash-fill"></i></a>
+                        <div class="tf-mini-cart-btns">
+                            <div class="wg-quantity small">
+                                <span class="btn-quantity minus-btn" data-id="{{ $item['id'] }}">-</span>
+                                <input type="number" name="number" data-id="{{ $item['id'] }}"
+                                    value="{{ $item['qty'] }}" min="1">
+                                <span class="btn-quantity plus-btn" data-id="{{ $item['id'] }}">+</span>
+                            </div>
+                        </div>
+                        <form method="post" action="{{ url('cart/delete/' . $item['id']) }}">
+                            @csrf
+                            <input type="hidden" name="item_id" value="{{ $item['id'] }}">
+                            <button type="submit" class="tf-mini-cart-remove"><i class="bi bi-trash-fill"></i></button>
+                        </form>
                     </td>
                 </tr>
-                <div class="tf-mini-cart-btns">
-                    <div class="wg-quantity small">
-                        <span class="btn-quantity minus-btn" data-id="{{ $item['id'] }}">-</span>
-
-                        <input type="number" name="number" data-id="{{ $item['id'] }}" value="{{ $item['qty'] }}"
-                            min="1">
-
-                        <span class="btn-quantity plus-btn" data-id="{{ $item['id'] }}">+</span>
-                    </div>
-                    <form method="post" action="{{ url('cart/delete/' . $item['id']) }}">
-                        @csrf
-                        <input type="hidden" name="item_id" value="{{ $item['id'] }}">
-                        <button type="submit" class="tf-mini-cart-remove"><i class="bi bi-trash-fill"></i></button>
-                    </form>
-                </div>
             @endforeach
         </table>
         <div class="cart-summary1">
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col-7 text-right text-muted"> المجموع الفرعي :</div>
                 <div class="col-5">
                     <strong> <span class="cart-products-total1"> {{ number_format($total_price, 2) }} </span> ريال
                     </strong>
                 </div>
-            </div>
+            </div> --}}
             {{-- <div class="row">
                 <div class="col-7 text-right text-muted">التوصيل :</div>
                 <div class="col-5">
                     <strong>$<span class="cart-delivery">0.00</span></strong>
                 </div>
             </div> --}}
-            <hr class="hr-sm" />
             <div class="row text-lg">
                 <div class="col-7 text-right text-muted"> الاجمالي :</div>
                 <div class="col-5">
-                    <strong> <span class="cart-total1 total-value">{{ number_format($total_price, 2) }}</span> ريال </strong>
+                    <strong> <span class="cart-total1 total-value">{{ number_format($total_price, 2) }}</span> ريال
+                    </strong>
                 </div>
             </div>
         </div>

@@ -105,7 +105,6 @@ class CartController extends Controller
         ]);
     }
 
-
     public function delete($id)
     {
         try {

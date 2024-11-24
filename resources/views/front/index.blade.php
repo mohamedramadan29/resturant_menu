@@ -197,8 +197,8 @@
                                                                             updateCartModal();
                                                                             $('#panel-cart').addClass('show');
                                                                             $('.product-modal').hide();
-                                                                              // إزالة overlay الخاص بالمودال
-                                                                              $('.modal-backdrop').remove();
+                                                                            // إزالة overlay الخاص بالمودال
+                                                                            $('.modal-backdrop').remove();
                                                                         },
                                                                         error: function(xhr, status, error) {
                                                                             Toastify({

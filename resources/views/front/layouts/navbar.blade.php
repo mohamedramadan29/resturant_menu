@@ -70,7 +70,7 @@
                 <img src="{{asset('assets/uploads/PublicSetting/' . $public_setting->website_logo)}}" alt=""/>
             </a>
         </div>
-        <a href="#" class="module module-cart" data-toggle="panel-cart">
+        <a href="#" class="module module-cart cart-icon" data-toggle="panel-cart">
             <i class="bi bi-bag-heart-fill"></i>
             <span class="notification1">{{$cartCount}}</span>
         </a>
