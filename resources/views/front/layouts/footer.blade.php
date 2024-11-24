@@ -9,7 +9,8 @@
         </div>
         @include('front.partials.cart_items')
     </div>
-    <a href="#" class="panel-cart-action checkout_button btn btn-secondary btn-block btn-lg"><span> اتمام الطلب  </span></a>
+    <a href="#" class="panel-cart-action checkout_button btn btn-secondary btn-block btn-lg"><span> اتمام الطلب
+        </span></a>
 </div>
 <div class="modal fade" id="verifyPhoneModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -110,8 +111,8 @@
         e.preventDefault();
 
 
-    const code = $('#verificationCode').val();
-    const phone = $('#hiddenPhone').val();
+        const code = $('#verificationCode').val();
+        const phone = $('#hiddenPhone').val();
 
         $.ajax({
             url: '{{ route('verify.code') }}', // راوت للتحقق من الرمز
@@ -120,7 +121,8 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             data: {
-                code, phone
+                code,
+                phone
             },
             success: function(response) {
                 if (response.verified) {
@@ -138,42 +140,36 @@
 </script>
 <!-- Footer -->
 <footer id="footer" class="bg-dark dark">
+    @php
+        $public_setting = \App\Models\admin\PublicSetting::first();
+    @endphp
     <div class="container">
         <!-- Footer 1st Row -->
         <div class="footer-first-row row">
             <div class="col-lg-3 text-center">
-                <a href="index.html"><img src="assets/img/logo-light.svg" alt="" width="88"
-                        class="mt-5 mb-5" /></a>
+                <a href="{{ url('/') }}"><img
+                        src="{{ asset('assets/uploads/PublicSetting/' . $public_setting->website_logo) }}"
+                        alt="" width="88" class="mt-5 mb-5" /></a>
             </div>
             <div class="col-lg-4 col-md-6">
-                <h5 class="text-muted">Latest news</h5>
-                <ul class="list-posts">
-                    <li>
-                        <a href="blog-post.html" class="title">How to create effective webdeisign?</a>
-                        <span class="date">February 14, 2015</span>
-                    </li>
-                    <li>
-                        <a href="blog-post.html" class="title">Awesome weekend in Polish mountains!</a>
-                        <span class="date">February 14, 2015</span>
-                    </li>
-                    <li>
-                        <a href="blog-post.html" class="title">How to create effective webdeisign?</a>
-                        <span class="date">February 14, 2015</span>
-                    </li>
-                </ul>
+                <h5 class="text-muted"> تابعنا </h5>
+                <a href="#" class="icon icon-social icon-circle icon-sm icon-facebook"><i
+                    class="bi bi-snapchat"></i></a>
+                <a href="#" class="icon icon-social icon-circle icon-sm icon-twitter"> <i class="bi bi-tiktok"></i> </a>
+                <a href="#" class="icon icon-social icon-circle icon-sm icon-instagram"><i class="bi bi-instagram"></i></a>
             </div>
             <div class="col-lg-5 col-md-6">
-                <h5 class="text-muted">Subscribe Us!</h5>
+                <h5 class="text-muted"> للحصول علي افضل العروض  </h5>
                 <!-- MailChimp Form -->
                 <form
-                    action="http://suelo.us12.list-manage.com/subscribe/post-json?u=ed47dbfe167d906f2bc46a01b&amp;id=24ac8a22ad"
+                    action="#"
                     id="sign-up-form" class="sign-up-form validate-form mb-5" method="POST">
-                    <div class="input-group">
-                        <input name="EMAIL" id="mce-EMAIL" type="email" class="form-control"
-                            placeholder="Tap your e-mail..." required />
+                    <div class="input-group" style="flex-direction: row-reverse">
+                        <input dir="rtl" name="EMAIL" id="mce-EMAIL" type="email" class="form-control"
+                            placeholder=" البريد الالكتروني ...  " required />
                         <span class="input-group-btn">
                             <button class="btn btn-primary btn-submit" type="submit">
-                                <span class="description">Subscribe</span>
+                                <span class="description"> اشترك معنا  </span>
                                 <span class="success">
                                     <svg x="0px" y="0px" viewBox="0 0 32 32">
                                         <path stroke-dasharray="19.79 19.79" stroke-dashoffset="19.79" fill="none"
@@ -186,22 +182,12 @@
                         </span>
                     </div>
                 </form>
-                <h5 class="text-muted mb-3">Social Media</h5>
-                <a href="#" class="icon icon-social icon-circle icon-sm icon-facebook"><i
-                        class="fa fa-facebook"></i></a>
-                <a href="#" class="icon icon-social icon-circle icon-sm icon-google"><i
-                        class="fa fa-google"></i></a>
-                <a href="#" class="icon icon-social icon-circle icon-sm icon-twitter"><i
-                        class="fa fa-twitter"></i></a>
-                <a href="#" class="icon icon-social icon-circle icon-sm icon-youtube"><i
-                        class="fa fa-youtube"></i></a>
-                <a href="#" class="icon icon-social icon-circle icon-sm icon-instagram"><i
-                        class="fa fa-instagram"></i></a>
+
             </div>
         </div>
         <!-- Footer 2nd Row -->
         <div class="footer-second-row">
-            <span class="text-muted">Copyright Soup 2017©. Made with love by Suelo.</span>
+            <span class="text-muted">  جميع الحقوق محفوظة لدي تراغيف بواسطة ...  </span>
         </div>
     </div>
 

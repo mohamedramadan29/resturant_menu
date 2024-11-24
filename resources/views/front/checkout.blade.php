@@ -113,7 +113,7 @@
                                 <div class="row mb-5">
                                     <div class="form-group col-sm-6">
                                         <label> الاسم :</label>
-                                        <input required type="text" class="form-control" name="name">
+                                        <input required type="text" class="form-control" name="name" value="{{ Auth::user()->name }}">
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label> رقم الهاتف :</label>

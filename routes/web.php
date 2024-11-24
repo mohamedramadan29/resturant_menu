@@ -44,7 +44,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     ////////////////////////// User Dashbpard
     Route::controller(UserController::class)->group(function () {
-
+        Route::get('account','account');
         Route::get('logout', 'logout')->name('logout');
     });
 });
