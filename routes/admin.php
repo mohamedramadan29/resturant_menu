@@ -3,6 +3,7 @@
 use App\Http\Controllers\admin\PublicSettingController;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\admin\AdminController;
+use App\Http\Controllers\admin\BranchController;
 use \App\Http\Controllers\admin\ProductController;
 use \App\Http\Controllers\admin\OrderController;
 use \App\Http\Controllers\admin\CategoryController;
@@ -76,6 +77,17 @@ Route::group(['prefix' => 'admin'], function () {
             Route::get('order/print/{id}', 'print');
             Route::get('orders/archive', 'archive');
         });
+
+        ########### Start Branch Controller
+
+        Route::controller(BranchController::class)->group(function () {
+
+            Route::get('branches', 'index');
+            Route::match(['post', 'get'], 'branch/store', 'store');
+            Route::match(['post', 'get'], 'branch/update/{id}', 'update');
+            Route::post('branch/delete/{id}', 'delete');
+        });
+        ############ End Branch Controller
 
 
     });

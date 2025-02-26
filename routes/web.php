@@ -14,7 +14,7 @@ Route::controller(FrontController::class)->group(function () {
 Route::controller(CartController::class)->group(function () {
     Route::get('cart', 'cart');
     // Route::match(['post','get'],'cart/add', 'add');
-    Route::post('/cart/add',  'add')->name('cart.add');
+    Route::post('/cart/add', 'add')->name('cart.add');
     Route::get('/cart/items', 'getCartItems');
     Route::post('cart/delete/{id}', 'delete');
     Route::post('/cart/update', 'updateCart')->name('cart.update');
@@ -44,9 +44,12 @@ Route::group(['middleware' => 'auth'], function () {
 
     ////////////////////////// User Dashbpard
     Route::controller(UserController::class)->group(function () {
-        Route::get('account','account');
+        Route::get('account', 'account');
         Route::get('logout', 'logout')->name('logout');
     });
 });
+
+Route::view('terms', 'front.terms');
+Route::view('privacy-policy', 'front.privacy-policy');
 
 include 'admin.php';

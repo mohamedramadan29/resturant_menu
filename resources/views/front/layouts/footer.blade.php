@@ -30,6 +30,7 @@
                     <button type="submit" class="btn btn-primary">إرسال رمز التحقق</button>
                 </form>
                 <form id="verifyCodeForm" style="display: none;">
+                    @csrf
                     <div class="form-group">
                         <input type="hidden" id="hiddenPhone" name="phone">
                         <label for="verificationCode">رمز التحقق</label>
@@ -152,42 +153,38 @@
                         alt="" width="88" class="mt-5 mb-5" /></a>
             </div>
             <div class="col-lg-4 col-md-6">
-                <h5 class="text-muted"> تابعنا </h5>
-                <a href="#" class="icon icon-social icon-circle icon-sm icon-facebook"><i
-                    class="bi bi-snapchat"></i></a>
-                <a href="#" class="icon icon-social icon-circle icon-sm icon-twitter"> <i class="bi bi-tiktok"></i> </a>
-                <a href="#" class="icon icon-social icon-circle icon-sm icon-instagram"><i class="bi bi-instagram"></i></a>
+                <h5 class="text-muted" style="margin-top: 15px" > تابعنا </h5>
+                <a href="https://www.snapchat.com/add/tragaif"
+                    class="icon icon-social icon-circle icon-sm icon-facebook"><i class="bi bi-snapchat"></i></a>
+                <a href="https://www.tiktok.com/@tragaif?lang=en"
+                    class="icon icon-social icon-circle icon-sm icon-twitter"> <i class="bi bi-tiktok"></i> </a>
+                <a href="https://www.instagram.com/tragaif/"
+                    class="icon icon-social icon-circle icon-sm icon-instagram"><i class="bi bi-instagram"></i></a>
             </div>
             <div class="col-lg-5 col-md-6">
-                <h5 class="text-muted"> للحصول علي افضل العروض  </h5>
-                <!-- MailChimp Form -->
-                <form
-                    action="#"
-                    id="sign-up-form" class="sign-up-form validate-form mb-5" method="POST">
-                    <div class="input-group">
-                        <input dir="rtl" name="EMAIL" id="mce-EMAIL" type="email" class="form-control"
-                            placeholder=" البريد الالكتروني ...  " required />
-                        <span class="input-group-btn">
-                            <button class="btn btn-primary btn-submit" type="submit">
-                                <span class="description"> اشترك معنا  </span>
-                                <span class="success">
-                                    <svg x="0px" y="0px" viewBox="0 0 32 32">
-                                        <path stroke-dasharray="19.79 19.79" stroke-dashoffset="19.79" fill="none"
-                                            stroke="#FFFFFF" stroke-width="2" stroke-linecap="square"
-                                            stroke-miterlimit="10" d="M9,17l3.9,3.9c0.1,0.1,0.2,0.1,0.3,0L23,11" />
-                                    </svg>
-                                </span>
-                                <span class="error">Try again...</span>
-                            </button>
-                        </span>
-                    </div>
-                </form>
-
+                <h5 class="text-muted" style="margin-top: 15px"> روابط </h5>
+                <ul class="list-posts">
+                    <li>
+                        <a href="{{ url('contact') }}" class="title contact"> اتصل بنا </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('terms') }}" class="title terms"> الشروط والاحكام </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('privacy-policy') }}" class="title privacy"> سياسة الخصوصية </a>
+                    </li>
+                </ul>
+                <div class="payments">
+                    <img src="{{ asset('assets/front/uploads/visa.png') }}">
+                    <img src="{{ asset('assets/front/uploads/master.png') }}">
+                    <img src="{{ asset('assets/front/uploads/mada.svg') }}">
+                    <img src="{{ asset('assets/front/uploads/urp.png') }}">
+                </div>
             </div>
         </div>
         <!-- Footer 2nd Row -->
         <div class="footer-second-row">
-            <span class="text-muted">  جميع الحقوق محفوظة لدي تراغيف بواسطة ...  </span>
+            <span class="text-muted"> جميع الحقوق محفوظة لدي تراغيف بواسطة ... </span>
         </div>
     </div>
 
@@ -201,6 +198,21 @@
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{ asset('assets/front/js/core.js') }}"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.contact').on('click', function(e) {
+            window.location.href = '{{ url('contact') }}';
+        });
+        $('.privacy').on('click', function(e) {
+            window.location.href = '{{ url('privacy-policy') }}';
+        });
+        $('.terms').on('click', function(e) {
+            window.location.href = '{{ url('terms') }}';
+        });
+    });
+</script>
 @toastifyJs
 @yield('js')
 </body>

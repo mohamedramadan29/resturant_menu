@@ -6249,3 +6249,14 @@ a {
     }
 }
 
+
+#footer .payments {
+    display: flex;
+    align-items: center;
+}
+
+#footer .payments img {
+    width: 60px;
+    margin-right: 10px;
+    margin-left: 10px;
+}

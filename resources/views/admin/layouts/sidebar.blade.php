@@ -95,6 +95,25 @@
                 </div>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link menu-arrow" href="#sidebarBranches" data-bs-toggle="collapse" role="button"
+                   aria-expanded="false" aria-controls="sidebarBranches">
+                                   <span class="nav-icon">
+                                        <iconify-icon icon="solar:bag-smile-bold-duotone"></iconify-icon>
+                                   </span>
+                    <span class="nav-text"> الفروع  </span>
+                </a>
+                <div class="collapse" id="sidebarBranches">
+                    <ul class="nav sub-navbar-nav">
+
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link" href="{{url('admin/branches')}}"> جميع الفروع  </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </li>
+
             <li class="menu-title mt-2"> اعدادات الموقع</li>
 
             <li class="nav-item">
