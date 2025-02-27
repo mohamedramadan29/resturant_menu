@@ -5,6 +5,7 @@ use App\Http\Controllers\front\CheckoutController;
 use App\Http\Controllers\front\UserController;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\front\FrontController;
+use App\Http\Controllers\front\MessageController;
 use App\Http\Controllers\front\OrderController;
 use Illuminate\Support\Facades\Auth;
 
@@ -52,4 +53,8 @@ Route::group(['middleware' => 'auth'], function () {
 Route::view('terms', 'front.terms');
 Route::view('privacy-policy', 'front.privacy-policy');
 
+Route::controller(MessageController::class)->group(function () {
+    Route::get('contact','index');
+    Route::match(['get','post'],'contact/sendmessage','store');
+});
 include 'admin.php';
