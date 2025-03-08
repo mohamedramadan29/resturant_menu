@@ -1,33 +1,21 @@
-<!-- Panel Cart -->
-<div id="panel-cart">
-    <div class="panel-cart-container">
-        <div class="panel-cart-title">
-            <h5 class="title"> سلة الشراء </h5>
-            <button class="close" data-toggle="panel-cart">
-                <i class="bi bi-x-square"></i>
-            </button>
-        </div>
-        @include('front.partials.cart_items')
-    </div>
-    <a href="#" class="panel-cart-action checkout_button btn btn-secondary btn-block btn-lg"><span> اتمام الطلب
-        </span></a>
-</div>
 <div class="modal fade" id="verifyPhoneModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">التحقق من رقم الهاتف</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <div class="modal-header d-flex justify-content-between">
+                <h5 class="modal-title"> ادخل رقم الهاتف لتسجيل الدخول </h5>
+                <button style="left: 10px;right: auto !important;font-size: 20px;" type="button" class="close"
+                    data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form id="verifyPhoneForm">
+                <form method="POST" action="{{ route('send.verification.code') }}">
+                    @csrf
                     <div class="form-group">
                         <label for="phone">رقم الهاتف</label>
-                        <input type="text" id="phone" class="form-control" placeholder="أدخل رقم الهاتف">
+                        <input type="text" name="phone" id="phone" class="form-control" placeholder="أدخل رقم الهاتف">
                     </div>
-                    <button type="submit" class="btn btn-primary">إرسال رمز التحقق</button>
+                    <button type="submit" class="btn btn-primary"> تسجيل الدخول </button>
                 </form>
                 <form id="verifyCodeForm" style="display: none;">
                     @csrf
@@ -52,7 +40,6 @@
         $('.checkout_button').on('click', function(e) {
             e.preventDefault();
             console.log('clicked');
-
             // تحقق من تسجيل الدخول عبر AJAX
             $.ajax({
                 url: '{{ route('check.login.status') }}', // راوت للتحقق من حالة تسجيل الدخول
@@ -62,6 +49,7 @@
                         // إذا كان المستخدم مسجل الدخول، انتقل إلى صفحة إتمام الطلب
                         window.location.href = '{{ url('checkout') }}';
                     } else {
+                     //   window.location.href = '{{ url('checkout') }}';
                         // إذا لم يكن مسجل الدخول، عرض المودال
                         $('#verifyPhoneModal').modal('show');
                     }
@@ -153,7 +141,7 @@
                         alt="" width="88" class="mt-5 mb-5" /></a>
             </div>
             <div class="col-lg-4 col-md-6">
-                <h5 class="text-muted" style="margin-top: 15px" > تابعنا </h5>
+                <h5 class="text-muted" style="margin-top: 15px"> تابعنا </h5>
                 <a href="https://www.snapchat.com/add/tragaif"
                     class="icon icon-social icon-circle icon-sm icon-facebook"><i class="bi bi-snapchat"></i></a>
                 <a href="https://www.tiktok.com/@tragaif?lang=en"
@@ -197,22 +185,13 @@
 <!-- JS Core -->
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{{ asset('assets/front/js/core.js') }}"></script>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('.contact').on('click', function(e) {
-            window.location.href = '{{ url('contact') }}';
-        });
-        $('.privacy').on('click', function(e) {
-            window.location.href = '{{ url('privacy-policy') }}';
-        });
-        $('.terms').on('click', function(e) {
-            window.location.href = '{{ url('terms') }}';
-        });
-    });
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
 @toastifyJs
 @yield('js')
 </body>

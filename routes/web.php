@@ -8,7 +8,8 @@ use \App\Http\Controllers\front\FrontController;
 use App\Http\Controllers\front\MessageController;
 use App\Http\Controllers\front\OrderController;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 Route::controller(FrontController::class)->group(function () {
     Route::get('/', 'index')->name('index');
 });
@@ -24,7 +25,7 @@ Route::controller(CartController::class)->group(function () {
 
 Route::group(['middleware' => 'auth'], routes: function () {
     Route::controller(CheckoutController::class)->group(function () {
-        Route::get('checkout', 'checkout');
+        Route::get('checkout', 'checkout')->name('checkout');
         Route::get('/get-shipping-price', 'getShippingPrice');
     });
 });
@@ -45,8 +46,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     ////////////////////////// User Dashbpard
     Route::controller(UserController::class)->group(function () {
-        Route::get('account', 'account');
-        Route::get('logout', 'logout')->name('logout');
+        Route::get('account', 'account')->name('account');
+        Route::get('logout', 'logout')->name('user.logout');
     });
 });
 
@@ -54,7 +55,16 @@ Route::view('terms', 'front.terms');
 Route::view('privacy-policy', 'front.privacy-policy');
 
 Route::controller(MessageController::class)->group(function () {
-    Route::get('contact','index');
-    Route::match(['get','post'],'contact/sendmessage','store');
+    Route::get('contact', 'index')->name('contact');
+    Route::match(['get', 'post'], 'contact/sendmessage', 'store')->name('contact.store');
 });
+
+Route::post('/set-branch-session', function (Request $request) {
+    Session::put('selected_branch', $request->branch);
+    return response()->json(['success' => true, 'branch' => $request->branch]);
+})->name('setBranchSession');
+
+Route::get('/get-branch-session', function () {
+    return response()->json(['branch' => Session::get('selected_branch')]);
+})->name('getBranchSession');
 include 'admin.php';

@@ -27,7 +27,7 @@ class MessageController extends Controller
                 'phone' => 'required',
                 'subject' => 'required',
                 'message' => 'required|string',
-                'g-recaptcha-response' => ['required', 'captcha']
+              //  'g-recaptcha-response' => ['required', 'captcha']
             ];
             $messages = [
                 'name.required' => ' من فضلك ادخل الاسم   ',
@@ -35,8 +35,8 @@ class MessageController extends Controller
                 'subject.required' => ' من فضلك ادخل عنوان الرسالة  ',
                 'message.required' => ' من فضلك ادخل الرسالة  ',
                 'message.string' => ' من فضلك ادخل نص الرسالة بشكل صحيح  ',
-                'g-recaptcha-response.required' => 'من فضلك قم بتأكيد أنك لست روبوتًا',
-                'g-recaptcha-response.captcha' => 'فشل التحقق من reCAPTCHA، يرجى المحاولة مرة أخرى'
+              //  'g-recaptcha-response.required' => 'من فضلك قم بتأكيد أنك لست روبوتًا',
+              //  'g-recaptcha-response.captcha' => 'فشل التحقق من reCAPTCHA، يرجى المحاولة مرة أخرى'
             ];
             $validator = Validator::make($data, $rules, $messages);
             if ($validator->fails()) {

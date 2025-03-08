@@ -1,5 +1,4 @@
-<div class="offcanvas offcanvas-start cart-offcanvas" tabindex="-1" id="offcanvascart"
-    aria-labelledby="offcanvasExampleLabel">
+<div class="offcanvas offcanvas-start cart-offcanvas" tabindex="-1" id="offcanvascart" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header">
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         <h5 class="offcanvas-title" id="offcanvasExampleLabel">سلة الشراء</h5>
@@ -68,8 +67,6 @@
                             </strong>
                         </div>
                     </div>
-                    <a 
-                        href="{{ url('checkout') }}" class="btn btn-primary checkout_button complete_order">إتمام الطلب</a>
                 </div>
             @else
                 <div class="cart-empty">

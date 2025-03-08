@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 
 class CheckoutController extends Controller
@@ -15,7 +16,7 @@ class CheckoutController extends Controller
     public function checkout()
     {
         $cartItems = Cart::getcartitems();
-        if (count($cartItems)  > 0) {
+        if (count($cartItems) > 0) {
             return view("front.checkout");
         } else {
             return redirect()->route('index');
@@ -33,7 +34,7 @@ class CheckoutController extends Controller
     public function sendVerificationCode(Request $request)
     {
         $phone = $request->input('phone');
-
+      //  dd($phone);
         // إرسال رمز التحقق باستخدام خدمة مثل Twilio (يمكنك إضافة الخدمة هنا)
         //$verificationCode = rand(1000, 9999);
         $verificationCode = '0000';
@@ -42,12 +43,31 @@ class CheckoutController extends Controller
             'phone' => $phone,
         ], [
             'phone' => $phone,
-            'verification_code' => $verificationCode,
-            'expires_at' => Carbon::now()->addMinutes(5)
+            // 'verification_code' => $verificationCode,
+            // 'expires_at' => Carbon::now()->addMinutes(5)
         ]);
+        $user = User::where('phone', $phone)->first();
+        if ($user) {
+            // إذا كان الرمز صحيحًا ولم تنتهِ صلاحيته
+            Auth::login($user); // تسجيل دخول المستخدم
+            // تحديث عناصر السلة
+            $cartItems = Cart::getcartitems(); // استدعاء عناصر السلة
+            // dd($cartItems);
+            if (!$cartItems || $cartItems->isEmpty()) {
+                $session_id = Session::get('session_id');
+                $cartItems = Cart::where('session_id', $session_id)->get();
+            }
+            foreach ($cartItems as $cartItem) {
+                $cartItem->user_id = $user->id; // تعيين user_id
+                $cartItem->save(); // حفظ العنصر في قاعدة البيانات
+            }
+            return Redirect::route('checkout');
+         // return response()->json(['message' => 'تم إرسال رمز التحقق']);
+        }
         // إرسال رسالة عبر API أو أي خدمة
         // يمكن إضافة الكود الخاص بإرسال الرسالة هنا
-        return response()->json(['message' => 'تم إرسال رمز التحقق']);
+
+          return response()->json(['message' => 'تم إرسال رمز التحقق']);
     }
 
     // التحقق من الرمز المدخل
