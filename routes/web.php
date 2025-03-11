@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\front\FrontController;
 use App\Http\Controllers\front\MessageController;
 use App\Http\Controllers\front\OrderController;
+use App\Http\Controllers\front\SetBranchController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -59,12 +60,19 @@ Route::controller(MessageController::class)->group(function () {
     Route::match(['get', 'post'], 'contact/sendmessage', 'store')->name('contact.store');
 });
 
-Route::post('/set-branch-session', function (Request $request) {
-    Session::put('selected_branch', $request->branch);
-    return response()->json(['success' => true, 'branch' => $request->branch]);
-})->name('setBranchSession');
-
-Route::get('/get-branch-session', function () {
-    return response()->json(['branch' => Session::get('selected_branch')]);
+Route::get('/getBranchSession', function () {
+    return response()->json([
+        'branch' => session('branch'),
+        'pickupMethod' => session('pickupMethod'),
+        'carDetails' => session('carDetails')
+    ]);
 })->name('getBranchSession');
+
+
+Route::controller(SetBranchController::class)->group(function () {
+    Route::post('/setBranchSession', 'setBranchSession')->name('setBranchSession');
+   // Route::get('/getBranchSession', 'getBranchSession')->name('getBranchSession');
+});
+
+
 include 'admin.php';

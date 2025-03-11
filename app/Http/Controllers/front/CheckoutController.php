@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\front;
 
-use App\Http\Controllers\Controller;
-use App\Models\front\Cart;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Models\front\Cart;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
+use App\Models\front\UserBranchDetail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
 
 class CheckoutController extends Controller
 {
@@ -34,7 +35,7 @@ class CheckoutController extends Controller
     public function sendVerificationCode(Request $request)
     {
         $phone = $request->input('phone');
-      //  dd($phone);
+        //  dd($phone);
         // إرسال رمز التحقق باستخدام خدمة مثل Twilio (يمكنك إضافة الخدمة هنا)
         //$verificationCode = rand(1000, 9999);
         $verificationCode = '0000';
@@ -61,13 +62,26 @@ class CheckoutController extends Controller
                 $cartItem->user_id = $user->id; // تعيين user_id
                 $cartItem->save(); // حفظ العنصر في قاعدة البيانات
             }
+            $session_id = Session::get('session_id');
+            ####### Update User Branch Detail
+            $user_branch = UserBranchDetail::where('session_id', $session_id)->first();
+            $user_old_branch = UserBranchDetail::where('user_id', $user->id)->first();
+            if ($user_old_branch) {
+                $user_old_branch->delete();
+            }
+            if ($user_branch) {
+
+                $user_branch->user_id = $user->id;
+                $user_branch->save();
+            }
+            ####### Update User Branch Detail
             return Redirect::route('checkout');
-         // return response()->json(['message' => 'تم إرسال رمز التحقق']);
+            // return response()->json(['message' => 'تم إرسال رمز التحقق']);
         }
         // إرسال رسالة عبر API أو أي خدمة
         // يمكن إضافة الكود الخاص بإرسال الرسالة هنا
 
-          return response()->json(['message' => 'تم إرسال رمز التحقق']);
+        return response()->json(['message' => 'تم إرسال رمز التحقق']);
     }
 
     // التحقق من الرمز المدخل

@@ -19,12 +19,14 @@ return new class extends Migration
             $table->string('image');
             $table->text('short_description')->nullable();
             $table->longText('description')->nullable();
-            $table->double('price', 8, 2);
+            $table->double('price', 8, 2)->nullable();
             $table->double('discount', 8, 2)->nullable();
             $table->boolean('status')->default(1);
             $table->string('meta_title')->nullable();
             $table->string('meta_description')->nullable();
             $table->string('meta_keywords')->nullable();
+            $table->string('product_type')->default('simple');
+            $table->string('carb')->nullable();
             $table->timestamps();
         });
     }

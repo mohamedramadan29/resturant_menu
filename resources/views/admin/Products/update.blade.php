@@ -41,7 +41,7 @@
 
                                     <div class="col-lg-6">
                                         <div class="mb-3">
-                                            <label for="category_id" class="form-label"> حدد القسم   </label>
+                                            <label for="category_id" class="form-label"> حدد القسم </label>
                                             <select required class="form-control" id="category_id" data-choices
                                                 data-choices-groups data-placeholder="Select Categories" name="category_id">
                                                 <option value=""> -- حدد القسم --</option>
@@ -82,6 +82,13 @@
                                                 name="description">{{ $product['description'] }}</textarea>
                                         </div>
                                     </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="carb" class="form-label"> السعرات الحرارية  </label>
+                                            <input type="text" id="carb" name="carb"
+                                                class="form-control" placeholder="" value="{{ $product['carb'] }}">
+                                        </div>
+                                    </div>
                                 </div>
 
 
@@ -107,20 +114,66 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card" id="simple-product-fields">
+                        <div class="card">
                             <div class="card-header">
                                 <h4 class="card-title"> تفاصيل السعر </h4>
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-lg-6">
-                                        <label for="product-price" class="form-label"> السعر  </label>
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
-                                            <input type="number" id="price" name="price"
-                                                class="form-control" placeholder="000"
-                                                value="{{ $product['price'] }}">
+                                    <div class="col-lg-6 mb-3">
+                                        <label for="product-type" class="form-label"> حدد نوع المنتج </label>
+                                        <!-- check if the product is simple or variable -->
+                                        <select name="product_type" id="product-type" class="form-select">
+                                            <option value="simple" @if ($product['product_type'] == 'simple') selected @endif>بسيط
+                                            </option>
+                                            <option value="variable" @if ($product['product_type'] == 'variable') selected @endif>متغير
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <br>
+
+                                    <div id="simple-product-fields">
+                                        <div class="col-lg-6">
+                                            <label for="product-price" class="form-label"> السعر </label>
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
+                                                <input type="number" id="price" name="price" class="form-control"
+                                                    placeholder="000" value="{{ $product['price'] }}">
+                                            </div>
                                         </div>
+                                    </div>
+
+                                    <div id="variable-product-fields">
+                                        <div id="size-price-container">
+                                            @foreach ($product->variations as $index => $variation)
+                                                <div class="row size-price-group mb-3"
+                                                    id="size-price-{{ $index }}">
+                                                    <div class="col-lg-5">
+                                                        <label class="form-label">الحجم</label>
+                                                        <input type="text" name="sizes[]" class="form-control"
+                                                            value="{{ $variation->size }}" required>
+                                                    </div>
+                                                    <div class="col-lg-5">
+                                                        <label class="form-label">السعر</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text fs-20"><i
+                                                                    class='bx bx-dollar'></i></span>
+                                                            <input type="number" step="0.01" name="prices[]"
+                                                                class="form-control" value="{{ $variation->price }}"
+                                                                required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-2 d-flex align-items-end">
+                                                        <button type="button" class="btn btn-danger remove-size"
+                                                            data-id="{{ $index }}">حذف</button>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+
+                                        <button type="button" class="btn btn-primary mt-3" id="add-size">إضافة
+                                            حجم</button>
+
                                     </div>
 
                                 </div>
@@ -187,3 +240,53 @@
 @endsection
 
 
+@section('js')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        document.getElementById('product-type').addEventListener('change', function() {
+            if (this.value === 'simple') {
+                document.getElementById('simple-product-fields').style.display = 'block';
+                document.getElementById('variable-product-fields').style.display = 'none';
+            } else {
+                document.getElementById('simple-product-fields').style.display = 'none';
+                document.getElementById('variable-product-fields').style.display = 'block';
+            }
+        });
+    </script>
+
+    <script>
+        document.getElementById('add-size').addEventListener('click', function() {
+            let container = document.getElementById('size-price-container');
+            let index = document.querySelectorAll('.size-price-group').length; // لحساب عدد الأحجام
+
+            let html = `
+            <div class="row size-price-group mb-3" id="size-price-${index}">
+                <div class="col-lg-5">
+                    <label class="form-label">الحجم</label>
+                    <input type="text" name="sizes[]" class="form-control" placeholder="مثال: صغير، متوسط، كبير" required>
+                </div>
+                <div class="col-lg-5">
+                    <label class="form-label">السعر</label>
+                    <div class="input-group">
+                        <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
+                        <input type="number" step="0.01" name="prices[]" class="form-control" placeholder="" required>
+                    </div>
+                </div>
+                <div class="col-lg-2 d-flex align-items-end">
+                    <button type="button" class="btn btn-danger remove-size" data-id="${index}">حذف</button>
+                </div>
+            </div>
+        `;
+
+            container.insertAdjacentHTML('beforeend', html);
+        });
+
+        // حذف الحقل عند النقر على زر "حذف"
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('remove-size')) {
+                let id = event.target.getAttribute('data-id');
+                document.getElementById(`size-price-${id}`).remove();
+            }
+        });
+    </script>
+@endsection

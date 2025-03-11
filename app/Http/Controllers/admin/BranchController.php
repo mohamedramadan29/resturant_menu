@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Models\admin\Branch;
 use Illuminate\Http\Request;
+use App\Models\admin\BranchHour;
 use App\Http\Traits\Message_Trait;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -20,7 +21,7 @@ class BranchController extends Controller
     public function store(Request $request)
     {
         if ($request->isMethod("post")) {
-            $data = $request->except('search_terms');
+            $data = $request->all();
             $rules = [
                 'name' => 'required|unique:branches,name',
                 'location' => 'required|unique:branches,location',
@@ -42,7 +43,23 @@ class BranchController extends Controller
                 return redirect()->back()->withErrors($validator)->withInput();
             }
 
-            Branch::create($data);
+            $branch = new Branch();
+            $branch->name = $data['name'];
+            $branch->location = $data['location'];
+            $branch->phone = $data['phone'];
+            $branch->map_link = $data['map_link'];
+            $branch->status = $data['status'];
+            $branch->save();
+
+
+            foreach ($request->working_hours as $day => $times) {
+                BranchHour::create([
+                    'branch_id' => $branch->id,
+                    'day' => $day,
+                    'open_time' => $times['open'],
+                    'close_time' => $times['close'],
+                ]);
+            }
 
             return $this->success_message('تم اضافة الفرع بنجاح ');
         }
@@ -54,10 +71,10 @@ class BranchController extends Controller
         $branch = Branch::find($id);
         if ($request->isMethod('post')) {
 
-            $data = $request->except('search_terms');
+            $data = $request->all();
             $rules = [
-                'name' => 'required|unique:branches.name' . $branch->id,
-                'location' => 'required|unique:branches.location' . $branch->id,
+                'name' => 'required|unique:branches,name,' . $branch->id,
+                'location' => 'required|unique:branches,location,' . $branch->id,
                 'phone' => 'required',
                 'status' => 'required'
             ];
@@ -70,7 +87,29 @@ class BranchController extends Controller
                 'phone.required' => 'من فضلك ادخل رقم الهاتف',
                 'status.required' => 'يرجى تحديد حالة الفرع',
             ];
-            $branch->update($data);
+            $validator = Validator::make($data, $rules, $messages);
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+            $branch->update([
+                'name' => $data['name'],
+                'location' => $data['location'],
+                'phone' => $data['phone'],
+                'map_link' => $data['map_link'],
+                'status' => $data['status'],
+            ]);
+            // BranchHour::where('branch_id', $branch->id)->delete();
+            foreach ($request->working_hours as $day => $times) {
+                $branch->hours()->updateOrCreate(
+                    ['day' => $day],
+                    [
+                        'open_time' => $times['open'],
+                        'close_time' => $times['close'],
+                    ]
+                );
+            }
+
+
             return $this->success_message('تم تعديل البيانات بنجاح');
         }
         return view('admin.branches.update', compact('branch'));

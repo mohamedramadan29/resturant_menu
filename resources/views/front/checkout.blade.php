@@ -50,6 +50,9 @@
                                                 <span class="name"><a href="#product-modal" data-toggle="modal">
                                                         {{ $item['name'] }} </a></span>
                                                 <span class="caption text-muted"> {{ $item['productdata']['name'] }} </span>
+                                                @if ($item['size'])
+                                                    <span class="caption badge badge-danger"> | {{ $item['size'] }} </span>
+                                                @endif
                                             </td>
                                             <td class="price cart-total1" data-id="{{ $item['id'] }}">
                                                 {{ number_format($item['total_price'], 2) }} </td>
@@ -113,7 +116,8 @@
                                 <div class="row mb-5">
                                     <div class="form-group col-sm-6">
                                         <label> الاسم :</label>
-                                        <input required type="text" class="form-control" name="name" value="{{ Auth::user()->name }}">
+                                        <input required type="text" class="form-control" name="name"
+                                            value="{{ Auth::user()->name }}">
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label> رقم الهاتف :</label>
@@ -124,24 +128,7 @@
                                         <label> ملاحظات : </label>
                                         <textarea name="notes" id="" cols="10" rows="4" class="form-control"></textarea>
                                     </div>
-
                                 </div>
-
-                                <h4 class="border-bottom pb-4" style="font-weight: 500"><i
-                                        class="bi bi-calendar-check-fill mr-3 text-primary"></i> توقيت التوصيل </h4>
-                                <div class="row mb-5">
-                                    <div class="form-group col-sm-6">
-                                        <label>حدد توقيت التوصيل :</label>
-                                        <div class="select-container">
-                                            <select class="form-select" name="delivery_time">
-                                                <option value="now"> في اسرع وقت </option>
-                                                <option value="after_hour"> بعد ساعه </option>
-                                                <option value="after_two_hour"> بعد ساعتين </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <h4 class="border-bottom pb-4" style="font-weight: 500"><i
                                         class="bi bi-credit-card-2-back-fill mr-3 text-primary"></i> طريقة الدفع </h4>
                                 <div class="row text-lg">
@@ -151,14 +138,6 @@
                                                 value="online">
                                             <span class="custom-control-indicator"></span>
                                             <span class="custom-control-description">الدفع الالكتروني </span>
-                                        </label>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6 form-group">
-                                        <label class="custom-control custom-radio">
-                                            <input type="radio" name="payment_type" class="custom-control-input"
-                                                value="cod">
-                                            <span class="custom-control-indicator"></span>
-                                            <span class="custom-control-description"> عند التوصيل </span>
                                         </label>
                                     </div>
                                 </div>

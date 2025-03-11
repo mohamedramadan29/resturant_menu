@@ -78,6 +78,13 @@
                                                 name="description">{{ old('description') }}</textarea>
                                         </div>
                                     </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="carb" class="form-label"> السعرات الحرارية  </label>
+                                            <input type="text" id="carb" name="carb"
+                                                class="form-control" placeholder="" value="{{ old('carb') }}">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -98,20 +105,43 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card" id="simple-product-fields">
+                        <div class="card">
                             <div class="card-header">
                                 <h4 class="card-title"> تفاصيل السعر </h4>
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-lg-6">
-                                        <label for="product-price" class="form-label"> السعر </label>
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
-                                            <input step="0.01" type="number" id="price" name="price"
-                                                class="form-control" placeholder="000">
+                                    <div class="col-lg-6 mb-3">
+                                        <label for="product-type" class="form-label"> حدد نوع المنتج </label>
+                                        <!-- check if the product is simple or variable -->
+                                        <select name="product_type" id="product-type" class="form-select">
+                                            <option value="simple">بسيط</option>
+                                            <option value="variable">متغير</option>
+                                        </select>
+                                    </div>
+                                    <br>
+                                    <div id="simple-product-fields">
+                                        <div class="col-lg-6">
+                                            <label for="product-price" class="form-label"> السعر </label>
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
+                                                <input step="0.01" type="number" id="price" name="price"
+                                                    class="form-control" placeholder="">
+                                            </div>
                                         </div>
                                     </div>
+                                    <div id="variable-product-fields" style="display: none">
+                                        <div class="col-lg-6">
+                                            <div id="size-price-container">
+                                                <!-- سيتم إضافة الحقول هنا -->
+                                            </div>
+
+                                            <button type="button" class="btn btn-primary mt-3" id="add-size">إضافة
+                                                حجم</button>
+                                        </div>
+                                    </div>
+
+
 
                                 </div>
                             </div>
@@ -177,7 +207,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         document.getElementById('product-type').addEventListener('change', function() {
-            if (this.value === 'بسيط') {
+            if (this.value === 'simple') {
                 document.getElementById('simple-product-fields').style.display = 'block';
                 document.getElementById('variable-product-fields').style.display = 'none';
             } else {
@@ -188,84 +218,38 @@
     </script>
 
     <script>
-        document.getElementById('confirm-variations').addEventListener('click', function($e) {
-            $e.preventDefault();
-            const attributes = document.querySelectorAll('select[name="attributes[]"]');
-            const variations = document.querySelectorAll('input[name="variations[]"]');
+        document.getElementById('add-size').addEventListener('click', function() {
+            let container = document.getElementById('size-price-container');
+            let index = document.querySelectorAll('.size-price-group').length; // لحساب عدد الأحجام
 
-            let selectedValues = [];
-
-            attributes.forEach((attribute, index) => {
-                const selectedAttribute = attribute.value;
-                if (selectedAttribute) {
-                    const variationValues = variations[index].value.split('-').map(v => v.trim());
-                    selectedValues.push(variationValues);
-                }
-            });
-
-            const productVariants = cartesianProduct(selectedValues);
-            let productVariantsHTML = '';
-
-            productVariants.forEach(variant => {
-                const variantText = variant.join(' - ');
-                const variationInputsHTML = `
-            <div class="variant-inputs d-flex align-items-center justify-content-between">
-                <div class="form-group">
-                    <label>اسم المتغير</label>
-                    <input name='variant_name[]' class="form-control" type="text" value="${variantText}">
+            let html = `
+            <div class="row size-price-group mb-3" id="size-price-${index}">
+                <div class="col-lg-5">
+                    <label class="form-label">الحجم</label>
+                    <input type="text" name="sizes[]" class="form-control" placeholder="مثال: صغير، متوسط، كبير" required>
                 </div>
-                <div class="form-group">
-                    <label>سعر المنتج</label>
-                    <input placeholder="السعر" class="form-control" type="number" name='variant_price[]'>
+                <div class="col-lg-5">
+                    <label class="form-label">السعر</label>
+                    <div class="input-group">
+                        <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
+                        <input type="number" step="0.01" name="prices[]" class="form-control" placeholder="" required>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>السعر بعد التخفيض</label>
-                    <input placeholder="السعر" class="form-control" type="number" name='variant_discount[]'>
-                </div>
-                <div class="form-group">
-                    <label>الكمية المتاحة</label>
-                    <input placeholder="الكمية" class="form-control" type="number" name='variant_stock[]'>
-                </div>
-                <div class="form-group">
-                    <label>صورة المنتج</label>
-                    <input type='file' class='form-control' name='variant_image[]'>
-                </div>
-                <div class="form-group">
-                    <button style="margin-top: 20px" class="btn btn-sm btn-danger delete-variant"><i class="ti ti-x"></i></button>
+                <div class="col-lg-2 d-flex align-items-end">
+                    <button type="button" class="btn btn-danger remove-size" data-id="${index}">حذف</button>
                 </div>
             </div>
         `;
-                productVariantsHTML += variationInputsHTML;
-            });
 
-            document.getElementById('product-variants').innerHTML = productVariantsHTML;
-
-            // أضف الاستماع لأزرار الحذف الجديدة
-            attachDeleteEventListeners();
+            container.insertAdjacentHTML('beforeend', html);
         });
 
-        function cartesianProduct(arrays) {
-            return arrays.reduce(function(a, b) {
-                var result = [];
-                a.forEach(function(a) {
-                    b.forEach(function(b) {
-                        result.push(a.concat([b]));
-                    });
-                });
-                return result;
-            }, [
-                []
-            ]);
-        }
-
-        function attachDeleteEventListeners() {
-            const deleteButtons = document.querySelectorAll('.delete-variant');
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const variantRow = this.closest('.variant-inputs');
-                    variantRow.remove();
-                });
-            });
-        }
+        // حذف الحقل عند النقر على زر "حذف"
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('remove-size')) {
+                let id = event.target.getAttribute('data-id');
+                document.getElementById(`size-price-${id}`).remove();
+            }
+        });
     </script>
 @endsection

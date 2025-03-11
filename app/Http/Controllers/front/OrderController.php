@@ -2,24 +2,26 @@
 
 namespace App\Http\Controllers\front;
 
-use App\Http\Controllers\Controller;
-use App\Models\front\Cart;
-use App\Models\front\Order;
-use App\Models\front\OrderDetails;
-use App\Notifications\NewOrder;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Traits\Message_Trait;
-use App\Models\admin\admin;
-use App\Models\admin\Product;
-use App\Models\front\OrderDetail;
 use App\Models\User;
+use App\Models\front\Cart;
+use App\Models\admin\admin;
+use App\Models\front\Order;
+use App\Models\admin\Branch;
+use Illuminate\Http\Request;
+use App\Models\admin\Product;
+use App\Notifications\NewOrder;
+use App\Models\front\OrderDetail;
+use App\Http\Traits\Message_Trait;
+use App\Models\front\OrderDetails;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Models\front\UserBranchDetail;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Notification;
 
 class OrderController extends Controller
 {
@@ -27,11 +29,18 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-
         $data = $request->all();
         $user = User::where('phone', $data['phone'])->first();
+        $user_branch = UserBranchDetail::where('user_id', $user->id)->first();
+        if (!$user_branch) {
+            return Redirect::back()->withInput()->withErrors('يجب عليك اختيار الفرع لاتمام الطلب');
+        }
+        $branch = Branch::find($user_branch->branch_id);
+        if ($branch->isOpen() == false) {
+            return Redirect::back()->withInput()->withErrors('الفرع مغلق في الوقت الحالي');
+        }
         // dd($data);
-        $coupon_amount =  Session::has('coupon_amount') ? Session::get('coupon_amount') : 0;
+        $coupon_amount = Session::has('coupon_amount') ? Session::get('coupon_amount') : 0;
         $coupon = Session::has('coupon_code') ? Session::get('coupon_code') : null;
         $cartItems = Cart::getcartitems();
         $total_price = Cart::getcarttotal();
@@ -56,12 +65,18 @@ class OrderController extends Controller
         $order->name = $data['name'];
         $order->phone = $data['phone'];
         $order->notes = $data['notes'];
-        $order->time_delivery = $data['delivery_time'];
+        $order->time_delivery = 'now';
         $order->payment_method = $data['payment_type'];
         $order->coupon_code = $coupon;
         $order->coupon_amount = $coupon_amount;
         $order->order_status = 'لم يبدا';
         $order->grand_total = $total_price;
+        $order->branch_name = $user_branch->branch_name ?? null;
+        $order->branch_id = $user_branch->branch_id ?? null;
+        $order->pickup_method = $user_branch->pickup_method ?? null;
+        $order->car_plate = $user_branch->car_plate ?? null;
+        $order->car_color = $user_branch->car_color ?? null;
+        $order->car_model = $user_branch->car_model ?? null;
         $order->save();
         $user->name = $data['name'];
         $user->save();

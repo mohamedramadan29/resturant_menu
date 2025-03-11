@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('title')
-   تعديل الفرع
+    تعديل الفرع
 @endsection
 @section('css')
     {{--    <!-- DataTables CSS --> --}}
@@ -12,7 +12,7 @@
 
         <!-- Start Container Fluid -->
         <div class="container-xxl">
-            <form method="post" action="{{ url('admin/branch/update/'.$branch->id) }}" enctype="multipart/form-data">
+            <form method="post" action="{{ url('admin/branch/update/' . $branch->id) }}" enctype="multipart/form-data">
                 @csrf
 
                 <div class="row">
@@ -64,6 +64,39 @@
                                         </div>
 
                                     </div>
+                                    <div class="col-lg-6">
+
+                                        <div class="mb-3">
+                                            <label for="map_link" class="form-label"> رابط جوجل ماب </label>
+                                            <input required type="text" id="map_link" class="form-control"
+                                                name="map_link" value="{{ $branch['map_link'] ?? old('map_link') }}">
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <label class="form-label">مواعيد العمل</label>
+                                        @foreach(['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'] as $day)
+                                            @php
+                                                $dayHour = $branch->hours->where('day', $day)->first();
+                                            @endphp
+                                            <div class="mb-2">
+                                                <label class="form-label">{{ $day }}</label>
+                                                <div class="row">
+                                                    <div class="col-md-5">
+                                                        <input type="time" name="working_hours[{{ $day }}][open]" class="form-control"
+                                                               value="{{ $dayHour ? $dayHour->open_time : '' }}" required>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <input type="time" name="working_hours[{{ $day }}][close]" class="form-control"
+                                                               value="{{ $dayHour ? $dayHour->close_time : '' }}" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+
+
 
 
 
@@ -85,7 +118,7 @@
                                     <a href="{{ url('admin/branches') }}" class="btn btn-primary w-100"> رجوع </a>
                                 </div>
                                 <div class="col-lg-2">
-                                    <button type="submit" class="btn btn-outline-secondary w-100"> تعديل  <i
+                                    <button type="submit" class="btn btn-outline-secondary w-100"> تعديل <i
                                             class='bx bxs-save'></i> </button>
                                 </div>
                             </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\front;
 
 use App\Http\Controllers\Controller;
 use App\Http\Traits\Message_Trait;
+use App\Models\admin\ProductVariation;
 use App\Models\front\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +29,17 @@ class CartController extends Controller
         $product_id = $request->input('product_id');
         $number = $request->input('number');
         $price = $request->input('price');
+        $vartion_price = null;
+        $vartion_size = null;
+        $size = null;
+        if ($request->has('size')) {
+            $vartion = ProductVariation::where('id', $request->input('size'))->first();
+            $vartion_price = $vartion->price;
+            $vartion_size = $vartion->size;
+            $price = $vartion_price;
+            $size = $vartion_size;
+            //dd($price, $size);
+        }
 
         if (!$product_id || !$number) {
             return response()->json(['error' => 'بيانات غير مكتملة'], 400);
@@ -43,11 +55,12 @@ class CartController extends Controller
         // تحقق إذا كان المنتج موجودًا بالفعل في السلة
         if (Auth::check()) {
             $user_id = Auth::user()->id;
-            $cartItem = Cart::where(['product_id' => $product_id, 'user_id' => $user_id])->first();
+            $cartItem = Cart::where(['product_id' => $product_id, 'user_id' => $user_id, 'size' => $size])->first();
         } else {
             $user_id = 0;
             $cartItem = Cart::where('session_id', $session_id)
                 ->where('product_id', $product_id)
+                ->where('size', $size)
                 ->first();
         }
 
@@ -56,11 +69,11 @@ class CartController extends Controller
             $cartItem->qty += $number;  // زيادة الكمية (يمكنك تعديلها حسب الحاجة)
             $cartItem->total_price = $cartItem->qty * $cartItem->price;  // تحديث السعر الإجمالي
             $cartItem->save();  // حفظ التحديثات
-            // return $this->success_message(' تم تحديث المنتج في السلة  ');
-            return response()->json([
-                'message' => 'تم تحديث المنتج في السلة بنجاح',
-                'cartCount' => Cart::where('session_id', $session_id)->count()  // إرسال العدد المحدث للسلة
-            ]);
+             return $this->success_message(' تم تحديث المنتج في السلة  ');
+            // return response()->json([
+            //     'message' => 'تم تحديث المنتج في السلة بنجاح',
+            //     'cartCount' => Cart::where('session_id', $session_id)->count()  // إرسال العدد المحدث للسلة
+            // ]);
         }
 
         // إذا لم يكن المنتج موجودًا في السلة، يتم إضافته
@@ -70,13 +83,14 @@ class CartController extends Controller
         $item->product_id = $product_id;
         $item->qty = $number;
         $item->price = $price;
+        $item->size = $size;
         $item->total_price = $number * $price;
         $item->save();
-        //return $this->success_message(' تم اضافة المنتج الي السلة  ');
-        return response()->json([
-            'message' => 'تم إضافة المنتج للسلة بنجاح',
-            'cartCount' => Cart::where('session_id', $session_id)->count()  // إرسال العدد المحدث للسلة
-        ]);
+        return $this->success_message(' تم اضافة المنتج الي السلة  ');
+        // return response()->json([
+        //     'message' => 'تم إضافة المنتج للسلة بنجاح',
+        //     'cartCount' => Cart::where('session_id', $session_id)->count()  // إرسال العدد المحدث للسلة
+        // ]);
     }
 
 

@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
-use App\Http\Traits\Message_Trait;
-use App\Http\Traits\Slug_Trait;
-use App\Http\Traits\Upload_Images;
-use App\Models\admin\Category;
-use App\Models\admin\Product;
 use Illuminate\Http\Request;
+use App\Models\admin\Product;
+use App\Models\admin\Category;
+use App\Http\Traits\Slug_Trait;
+use App\Http\Traits\Message_Trait;
+use App\Http\Traits\Upload_Images;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Models\admin\ProductVariation;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 
@@ -32,6 +33,8 @@ class ProductController extends Controller
         if ($request->isMethod('post')) {
             try {
                 $data = $request->all();
+                $sizes = $request->input('sizes');
+                $prices = $request->input('prices');
                 $rules = [
                     'name' => 'required',
                     'category_id' => 'required',
@@ -75,7 +78,18 @@ class ProductController extends Controller
                 $product->meta_keywords = $data['meta_keywords'];
                 $product->meta_description = $data['meta_description'];
                 $product->image = $file_name;
+                $product->product_type = $data['product_type'];
+                $product->carb = $data['carb'];
                 $product->save();
+                if ($data['product_type'] == 'variable') {
+                    foreach ($sizes as $index => $size) {
+                        ProductVariation::create([
+                            'product_id' => $product->id,
+                            'size' => $size,
+                            'price' => $prices[$index],
+                        ]);
+                    }
+                }
                 DB::commit();
                 return $this->success_message(' تم اضافة المنتج بنجاح  ');
             } catch (\Exception $e) {
@@ -92,29 +106,29 @@ class ProductController extends Controller
         // جلب المنتج مع الفئة الفرعية والمتغيرات المرتبطة به
         $product = Product::where('slug', $slug)->first();
 
-
-
         if ($request->isMethod('post')) {
-            // التحقق من صحة المدخلات
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'category_id' => 'required|integer',
-            ]);
-            DB::beginTransaction();
-            if ($request->hasFile('image')) {
-                ////// Delete Old Image
-                $old_image = public_path('assets/uploads/product_images/' . $product->image);
-                if (file_exists($old_image)) {
-                    @unlink($old_image);
-                }
-                $file_name = $this->saveImage($request->image, public_path('assets/uploads/product_images'));
-
-                $product->update([
-                    'image' => $file_name
-                ]);
-            }
             try {
+                // التحقق من صحة المدخلات
+                $request->validate([
+                    'name' => 'required|string|max:255',
+                    'category_id' => 'required|integer',
+                ]);
+                DB::beginTransaction();
+                if ($request->hasFile('image')) {
+                    ////// Delete Old Image
+                    $old_image = public_path('assets/uploads/product_images/' . $product->image);
+                    if (file_exists($old_image)) {
+                        @unlink($old_image);
+                    }
+                    $file_name = $this->saveImage($request->image, public_path('assets/uploads/product_images'));
+
+                    $product->update([
+                        'image' => $file_name
+                    ]);
+                }
+
                 $data = $request->all();
+
                 //dd($data);
                 // البحث عن المنتج للتعديل
                 // $product = Product::find();  // استبدال $productId بالمعرّف الخاص بالمنتج
@@ -130,7 +144,25 @@ class ProductController extends Controller
                 $product->meta_title = $data['meta_title'];
                 $product->meta_keywords = $data['meta_keywords'];
                 $product->meta_description = $data['meta_description'];
+                $product->product_type = $data['product_type'];
+                $product->carb = $data['carb'];
                 $product->save();
+
+                // حذف الأحجام القديمة
+                if ($data['product_type'] == 'variable') {
+                    // حفظ الأحجام والأسعار الجديدة
+                    $sizes = $request->input('sizes');
+                    $prices = $request->input('prices');
+                    $product->variations()->delete();
+                    foreach ($sizes as $index => $size) {
+                        ProductVariation::create([
+                            'product_id' => $product->id,
+                            'size' => $size,
+                            'price' => $prices[$index],
+                        ]);
+                    }
+                }
+
                 DB::commit();
                 // بعد تحديث المنتج بنجاح
                 return Redirect::route('product.update', ['slug' => $product->slug])
@@ -153,14 +185,14 @@ class ProductController extends Controller
         return $this->success_message(' تم حذف المنتج بنجاح  ');
     }
 
-    public function delete_image_gallary($id)
-    {
-        $imageGallary = ProductGallary::findOrFail($id);
-        $oldimage = public_path('assets/uploads/product_gallery/' . $imageGallary['image']);
-        if (file_exists($oldimage)) {
-            @unlink($oldimage);
-        }
-        $imageGallary->delete();
-        return $this->success_message(' تم حذف الصورة بنجاح  ');
-    }
+    // public function delete_image_gallary($id)
+    // {
+    //     $imageGallary = ProductGallary::findOrFail($id);
+    //     $oldimage = public_path('assets/uploads/product_gallery/' . $imageGallary['image']);
+    //     if (file_exists($oldimage)) {
+    //         @unlink($oldimage);
+    //     }
+    //     $imageGallary->delete();
+    //     return $this->success_message(' تم حذف الصورة بنجاح  ');
+    // }
 }

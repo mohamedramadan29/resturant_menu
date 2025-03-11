@@ -48,17 +48,72 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="mb-3">
-                                            <label for="name" class="form-label"> توقيت الطلب  </label>
+                                            <label for="name" class="form-label"> توقيت الطلب </label>
                                             <input disabled required type="text" id="name" class="form-control"
                                                 name="name" value="{{ $order['time_delivery'] }}">
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
                                         <div class="mb-3">
-                                            <label for="name" class="form-label">  ملاحظات   </label>
+                                            <label for="name" class="form-label"> ملاحظات </label>
                                             <textarea class="form-control" disabled readonly name="" id="">{{ $order['notes'] }}</textarea>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title"> طريقة الاستلام </h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label"> الفرع </label>
+                                            <input disabled required type="text" id="name" class="form-control"
+                                                name="name" value="{{ $order['branch_name'] }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        @if ($order['pickup_method'] == 'counter')
+                                            <div class="mb-3">
+                                                <label for="name" class="form-label"> طريقة الاستلام </label>
+                                                <input disabled required type="text" id="name" class="form-control"
+                                                    name="name" value=" استلام من الشباك ">
+                                            </div>
+                                        @else
+                                            <div class="mb-3">
+                                                <label for="name" class="form-label"> طريقة الاستلام </label>
+                                                <input disabled required type="text" id="name" class="form-control"
+                                                    name="name" value=" استلام من  السيارة ">
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="name" class="form-label"> رقم السيارة </label>
+                                                    <input disabled required type="text" id="name" class="form-control"
+                                                        name="name" value="{{ $order['car_plate'] }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="name" class="form-label"> اللون </label>
+                                                    <input disabled required type="text" id="name" class="form-control"
+                                                        name="name" value="{{ $order['car_color'] }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="name" class="form-label"> الموديل </label>
+                                                    <input disabled required type="text" id="name" class="form-control"
+                                                        name="name" value="{{ $order['car_model'] }}">
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                    </div>
+
+
                                 </div>
                             </div>
                         </div>

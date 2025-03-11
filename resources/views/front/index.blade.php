@@ -53,21 +53,32 @@
                                             <div class="col-lg-3 col-12">
                                                 <!-- Menu Item -->
                                                 <div class="menu-item menu-grid-item">
-                                                        <img loading="lazy" style="width: 100%" class="mb-4"
+                                                    <img loading="lazy" style="width: 100%" class="mb-4"
                                                         src="{{ asset('assets/uploads/product_images/' . $product['image']) }}"
                                                         alt="{{ $product['name'] }}" />
                                                     <h6 class="mb-0">{{ $product['name'] }}</h6>
                                                     <div class="row align-items-center mt-4">
                                                         <div class="col-6">
-                                                            <span class="text-md mr-4">
-                                                                <span class="text-muted"></span> <span
-                                                                    data-product-base-price class="product-price">
-                                                                    {{ number_format($product['price'], 2) }} </span> <img
-                                                                    loading="lazy" width="20px"
-                                                                    src="{{ asset('assets/uploads/riyal.svg') }}"
-                                                                    alt="">
-
-                                                            </span>
+                                                            @if ($product['product_type'] == 'variable')
+                                                                @foreach ($product->variations as $variation)
+                                                                    <span class="text-md mr-4">
+                                                                        <span class="text-muted"></span> <span
+                                                                            data-product-base-price class="product-price">
+                                                                            {{ number_format($variation['price'], 2) }}
+                                                                        </span> <img loading="lazy" width="20px"
+                                                                            src="{{ asset('assets/uploads/riyal.svg') }}"
+                                                                            alt="">
+                                                                    </span>
+                                                                @endforeach
+                                                            @else
+                                                                <span class="text-md mr-4">
+                                                                    <span class="text-muted"></span> <span
+                                                                        data-product-base-price class="product-price">
+                                                                        {{ number_format($product['price'], 2) }}
+                                                                    </span> <img loading="lazy" width="20px"
+                                                                        src="{{ asset('assets/uploads/riyal.svg') }}"
+                                                                        alt="">
+                                                            @endif
                                                         </div>
                                                         <div class="col-6 text-sm-right mt-2 mt-sm-0">
                                                             <button class="btn btn-secondary btn-sm add_to_cart"
@@ -105,55 +116,97 @@
                                                                         {{ $product['name'] }}</h6>
                                                                     <span
                                                                         class="product-modal-ingredients">{{ $product['description'] }}</span>
+                                                                    @if ($product['carb'] != null)
+                                                                        <span class="d-block" style="color:#000000">
+                                                                            <strong> السعرات الحرارية :
+                                                                                {{ $product['carb'] }} سعر حراري</strong>
+                                                                        </span>
+                                                                    @endif
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="quantity_section">
-                                                            <div>
-                                                                <div class="quantity">
-                                                                    <div class="quantity-control d-flex align-items-center">
-                                                                        <!-- زر تقليل العدد -->
-                                                                        <button class="decrease-quantity btn"
-                                                                            data-product-id="{{ $product['id'] }}"
-                                                                            data-product-price="{{ $product['price'] }}">
-                                                                            -
-                                                                        </button>
-                                                                        <!-- إدخال العدد -->
-                                                                        <input id="quantity-{{ $product['id'] }}"
-                                                                            type="number" value="1" name="quantity"
-                                                                            class="mx-2 text-center" style="width: 60px;"
-                                                                            min="1"
-                                                                            data-product-id="{{ $product['id'] }}"
-                                                                            data-product-price="{{ $product['price'] }}">
-                                                                        <!-- زر زيادة العدد -->
-                                                                        <button class="increase-quantity btn"
-                                                                            data-product-id="{{ $product['id'] }}"
-                                                                            data-product-price="{{ $product['price'] }}">
-                                                                            +
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="price_section">
-                                                                <span id="total-price-{{ $product['id'] }}"
-                                                                    class="product-modal-price">{{ number_format($product['price'], 2) }}
-                                                                </span>
-                                                                <img loading="lazy" src="{{ asset('assets/uploads/riyal.svg') }}"
-                                                                    style="width: 20px;" alt="riyal">
-                                                            </div>
-
                                                         </div>
                                                         <form id="addToCart_{{ $product['id'] }}" class=""
-                                                            method="post">
+                                                            method="post" action="{{ route('cart.add') }}">
+                                                            <div class="quantity_section">
+                                                                <div>
+                                                                    <div class="quantity">
+                                                                        <div
+                                                                            class="quantity-control d-flex align-items-center">
+                                                                            <!-- زر تقليل العدد -->
+                                                                            <button class="decrease-quantity btn"
+                                                                                data-product-id="{{ $product['id'] }}"
+                                                                                data-product-price="{{ $product['price'] }}">
+                                                                                -
+                                                                            </button>
+                                                                            <!-- إدخال العدد -->
+                                                                            <input id="quantity-{{ $product['id'] }}"
+                                                                                type="number" value="1"
+                                                                                name="quantity" class="mx-2 text-center"
+                                                                                style="width: 60px;" min="1"
+                                                                                data-product-id="{{ $product['id'] }}"
+                                                                                data-product-price="{{ $product['price'] }}">
+                                                                            <!-- زر زيادة العدد -->
+                                                                            <button class="increase-quantity btn"
+                                                                                data-product-id="{{ $product['id'] }}"
+                                                                                data-product-price="{{ $product['price'] }}">
+                                                                                +
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- تحديد الحجم إذا كان المنتج متغير -->
+                                                                @if ($product['product_type'] == 'variable')
+                                                                    <div class="price_section">
+                                                                        <label for="product-size-{{ $product['id'] }}"
+                                                                            class="form-label mt-2"> اختر الحجم </label>
+                                                                        <select required
+                                                                            class="form-select mb-3 size-select"
+                                                                            id="product-size-{{ $product['id'] }}"
+                                                                            name="size"
+                                                                            data-product-id="{{ $product['id'] }}">
+                                                                            <option value="" selected disabled>اختر
+                                                                                الحجم
+                                                                            </option> <!-- خيار افتراضي -->
+                                                                            @foreach ($product['variations'] as $variation)
+                                                                                <option value="{{ $variation['id'] }}"
+                                                                                    data-price="{{ $variation['price'] }}">
+                                                                                    {{ $variation['size'] }} -
+                                                                                    {{ number_format($variation['price'], 2) }}
+                                                                                    ريال
+                                                                                </option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                @else
+                                                                    <div class="price_section">
+                                                                        <span id="total-price-{{ $product['id'] }}"
+                                                                            class="product-modal-price">{{ number_format($product['price'], 2) }}
+                                                                        </span>
+                                                                        <img loading="lazy"
+                                                                            src="{{ asset('assets/uploads/riyal.svg') }}"
+                                                                            style="width: 20px;" alt="riyal">
+                                                                    </div>
+                                                                @endif
+
+
+                                                            </div>
+
                                                             @csrf
                                                             <input type="hidden" name="product_id"
                                                                 value="{{ $product['id'] }}">
-                                                            <input type="hidden" id="hidden-quantity-{{ $product['id'] }}"
-                                                                name="number" value="1">
-                                                            <input type="hidden" name="price"
-                                                                value="{{ $product['price'] }}">
+                                                            <input type="hidden"
+                                                                id="hidden-quantity-{{ $product['id'] }}" name="number"
+                                                                value="1">
+                                                            <input type="hidden" id="hidden-price-{{ $product['id'] }}"
+                                                                name="price" value="{{ $product['price'] }}">
+
+                                                            @if ($product['product_type'] == 'variable')
+                                                                <input type="hidden"
+                                                                    id="hidden-size-{{ $product['id'] }}" name="size">
+                                                            @endif
+
                                                             <div class="row align-items-center">
-                                                                <button type="button"
+                                                                <button type="submit"
                                                                     id="addtocartbutton_{{ $product['id'] }}"
                                                                     class="btn btn-secondary btn-block btn-lg">
                                                                     اضف الي السلة
@@ -162,80 +215,116 @@
                                                         </form>
                                                         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                                                         <script>
+                                                            // $(document).ready(function() {
+                                                            //     $(".form-select").on('change', function() {
+                                                            //         var selectedSize = $(this).val();
+                                                            //         var productId = $(this).data("product-id");
+
+                                                            //         $("#hidden-size-" + productId).val(selectedSize);
+                                                            //     });
+                                                            //     $("#addtocartbutton_{{ $product['id'] }}").on('click', function(e) {
+                                                            //         e.preventDefault();
+
+                                                            //         $.ajax({
+                                                            //             url: '{{ route('cart.add') }}',
+                                                            //             method: 'POST',
+                                                            //             headers: {
+                                                            //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                                            //             },
+                                                            //             data: $("#addToCart_{{ $product['id'] }}").serialize(),
+                                                            //             success: function(response) {
+                                                            //                 Toastify({
+                                                            //                     text: response.message,
+                                                            //                     duration: 3000,
+                                                            //                     gravity: "top",
+                                                            //                     position: "right",
+                                                            //                     backgroundColor: "#4CAF50",
+                                                            //                 }).showToast();
+
+                                                            //                 if (response.cartCount) {
+                                                            //                     $('.cart-icon .notification1').text(response.cartCount);
+                                                            //                 }
+                                                            //                 updateCartModal();
+                                                            //                 $('.product-modal').hide();
+                                                            //                 $('.modal-backdrop').remove();
+                                                            //                 $('body').css('overflow', 'auto');
+                                                            //             },
+                                                            //             error: function(xhr, status, error) {
+                                                            //                 Toastify({
+                                                            //                     text: "حدث خطأ أثناء إضافة المنتج للسلة",
+                                                            //                     duration: 3000,
+                                                            //                     gravity: "top",
+                                                            //                     position: "right",
+                                                            //                     backgroundColor: "#FF5733",
+                                                            //                 }).showToast();
+                                                            //             }
+                                                            //         });
+                                                            //     });
+
+                                                            //     function updateCartCount(cartCount) {
+                                                            //         $('.cart-icon .notification').text(cartCount);
+                                                            //     }
+
+                                                            //     function updateCartModal() {
+                                                            //         $.ajax({
+                                                            //             url: '/cart/items',
+                                                            //             method: 'GET',
+                                                            //             success: function(response) {
+                                                            //                 if (response.html) {
+                                                            //                     $('#panel-cart .cart-details').html(response.html);
+                                                            //                 }
+
+                                                            //                 if (response.cartCount) {
+                                                            //                     updateCartCount(response.cartCount);
+                                                            //                 }
+                                                            //             },
+                                                            //             error: function(xhr, status, error) {
+                                                            //                 console.error('خطأ في تحديث السلة:', error);
+                                                            //             }
+                                                            //         });
+                                                            //     }
+                                                            //     $(".form-select").on('change', function() {
+                                                            //         var selectedOption = $(this).find(":selected");
+                                                            //         var newPrice = selectedOption.data("price");
+                                                            //         var productId = $(this).data("product-id");
+
+                                                            //         // تحديث السعر المعروض
+                                                            //         $("#total-price-" + productId).text(newPrice.toFixed(2));
+
+                                                            //         // تحديث قيمة السعر المخفية ليتم إرسالها إلى السلة
+                                                            //         $("#hidden-price-" + productId).val(newPrice);
+                                                            //     });
+                                                            // });
+                                                        </script>
+                                                        <script>
                                                             $(document).ready(function() {
-                                                                $("#addtocartbutton_{{ $product['id'] }}").on('click', function(e) {
-                                                                    e.preventDefault();
-                                                                    console.log('clicked');
+                                                                $(".size-select").on('change', function() {
+                                                                    var selectedOption = $(this).find(":selected");
+                                                                    var newPrice = selectedOption.data("price");
+                                                                    var productId = $(this).data("product-id");
 
-                                                                    $.ajax({
-                                                                        url: '{{ route('cart.add') }}',
-                                                                        method: 'POST',
-                                                                        headers: {
-                                                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                                                        },
-                                                                        data: $("#addToCart_{{ $product['id'] }}").serialize(),
-                                                                        success: function(response) {
-                                                                            // تحقق من وجود الحقول المطلوبة في response
-                                                                            if (response.message) {
-                                                                                Toastify({
-                                                                                    text: response.message,
-                                                                                    duration: 3000,
-                                                                                    gravity: "top",
-                                                                                    position: "right",
-                                                                                    backgroundColor: "#4CAF50",
-                                                                                }).showToast();
-                                                                            }
-                                                                            // تحديث عداد المنتجات في السلة
-                                                                            if (response.cartCount) {
-                                                                                $('.cart-icon .notification1').text(response.cartCount);
-                                                                            }
-
-                                                                            if (response.cartCount) {
-                                                                                updateCartCount(response.cartCount); // تحديث العداد
-                                                                            }
-                                                                            updateCartModal();
-                                                                           // $('#offcanvascart').addClass('show');
-                                                                            $('.product-modal').hide();
-                                                                            // إزالة overlay الخاص بالمودال
-                                                                            $('.modal-backdrop').remove();
-                                                                            $('body').css('overflow', 'auto');
-                                                                        },
-                                                                        error: function(xhr, status, error) {
-                                                                            Toastify({
-                                                                                text: "حدث خطأ أثناء إضافة المنتج للسلة",
-                                                                                duration: 3000,
-                                                                                gravity: "top",
-                                                                                position: "right",
-                                                                                backgroundColor: "#FF5733",
-                                                                            }).showToast();
-                                                                        }
-                                                                    });
+                                                                    if (selectedOption.val() !== "") { // تأكد من أن الحجم ليس الخيار الافتراضي
+                                                                        $("#hidden-price-" + productId).val(newPrice);
+                                                                        $("#hidden-size-" + productId).val(selectedOption.val());
+                                                                    }
                                                                 });
 
-                                                                function updateCartCount(cartCount) {
-                                                                    $('.cart-icon .notification').text(cartCount);
-                                                                }
 
-                                                                function updateCartModal() {
-                                                                    $.ajax({
-                                                                        url: '/cart/items',
-                                                                        method: 'GET',
-                                                                        success: function(response) {
-                                                                            if (response.html) {
-                                                                                $('#panel-cart .cart-details').html(response.html);
-                                                                            }
-
-                                                                            if (response.cartCount) {
-                                                                                updateCartCount(response.cartCount);
-                                                                            }
-                                                                        },
-                                                                        error: function(xhr, status, error) {
-                                                                            console.error('خطأ في تحديث السلة:', error);
+                                                                // منع الإرسال فقط إذا كان المنتج من النوع variable
+                                                                $("#addToCart_{{ $product['id'] }}").on("submit", function(e) {
+                                                                    var productType = @json($product['product_type']); // استرجاع نوع المنتج
+                                                                    if (productType === 'variable') {
+                                                                        var productId = $(this).find(".size-select").data("product-id");
+                                                                        var selectedSize = $("#hidden-size-" + productId).val();
+                                                                        if (!selectedSize) {
+                                                                            alert("يرجى اختيار الحجم قبل إضافة المنتج إلى السلة.");
+                                                                            e.preventDefault(); // منع الإرسال
                                                                         }
-                                                                    });
-                                                                }
+                                                                    }
+                                                                });
                                                             });
                                                         </script>
+
 
 
                                                     </div>
@@ -261,7 +350,8 @@
         document.addEventListener("DOMContentLoaded", function() {
             // زيادة العدد
             document.querySelectorAll(".increase-quantity").forEach(button => {
-                button.addEventListener("click", function() {
+                button.addEventListener("click", function($e) {
+                    $e.preventDefault();
                     const productId = this.dataset.productId;
                     const productPrice = parseFloat(this.dataset.productPrice);
                     const quantityInput = document.getElementById(`quantity-${productId}`);
@@ -283,7 +373,8 @@
 
             // تقليل العدد
             document.querySelectorAll(".decrease-quantity").forEach(button => {
-                button.addEventListener("click", function() {
+                button.addEventListener("click", function($e) {
+                    $e.preventDefault();
                     const productId = this.dataset.productId;
                     const productPrice = parseFloat(this.dataset.productPrice);
                     const quantityInput = document.getElementById(`quantity-${productId}`);

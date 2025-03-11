@@ -14,7 +14,7 @@ class OrderController extends Controller
     use Message_Trait;
     public function index()
     {
-        $orders = Order::all();
+        $orders = Order::orderBy('id','desc')->get();
         return view('admin.orders.index',compact('orders'));
     }
 

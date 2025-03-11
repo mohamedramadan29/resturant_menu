@@ -51,6 +51,8 @@
                     } else {
                      //   window.location.href = '{{ url('checkout') }}';
                         // إذا لم يكن مسجل الدخول، عرض المودال
+                        $('#offcanvascart').removeClass('show');
+                        $('#offcanvascart').hide();
                         $('#verifyPhoneModal').modal('show');
                     }
                 },

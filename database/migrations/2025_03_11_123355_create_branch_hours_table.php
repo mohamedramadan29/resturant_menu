@@ -4,20 +4,18 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('branches', function (Blueprint $table) {
+        Schema::create('branch_hours', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->string('location')->unique();
-            $table->string('phone');
-            $table->string('map_link')->nullable();
-            $table->tinyInteger('status')->default(1);
+            $table->foreignId('branch_id')->references('id')->on('branches')->cascadeOnDelete();
+            $table->string('day');
+            $table->time('open_time');
+            $table->time('close_time');
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('branches');
+        Schema::dropIfExists('branch_hours');
     }
 };
