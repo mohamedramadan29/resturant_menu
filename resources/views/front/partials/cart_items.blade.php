@@ -24,6 +24,9 @@
                                 <span class="name"><a href="#product-modal" data-toggle="modal"> {{ $item['name'] }}
                                     </a></span>
                                 <span class="caption text-muted"> {{ $item['productdata']['name'] }} </span>
+                                @if ($item['size'])
+                                <span class="caption badge badge-danger"> {{ $item['size'] }} </span>
+                            @endif
                             </td>
                             <td class="price cart-total1" data-id="{{ $item['id'] }}">
                                 {{ number_format($item['total_price'], 2) }} </td>
@@ -68,7 +71,7 @@
                             </strong>
                         </div>
                     </div>
-                    <a 
+                    <a
                         href="{{ url('checkout') }}" class="btn btn-primary checkout_button complete_order">إتمام الطلب</a>
                 </div>
             @else

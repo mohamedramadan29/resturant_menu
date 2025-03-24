@@ -11,4 +11,14 @@ class admin extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
     protected $guarded =[];
+
+    // public function receivesBroadcastNotificationsOn(): string
+    // {
+    //     return 'admin.'.$this->id;
+    // }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class,'branch_id');
+    }
 }

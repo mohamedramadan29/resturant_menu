@@ -31,9 +31,6 @@
         <div class="page-content">
             <div class="container">
                 <div class="row no-gutters">
-
-
-
                     <div id="categories-menu" class="categories-container">
                         <ul class="list-unstyled all_categories">
                             @foreach ($categories as $category)
@@ -53,6 +50,9 @@
                                             <div class="col-lg-3 col-12">
                                                 <!-- Menu Item -->
                                                 <div class="menu-item menu-grid-item">
+                                                    @if ($product['is_featured'] == 1)
+                                                        <span class="badge bg-success featured-badge">مميز</span> 
+                                                    @endif
                                                     <img loading="lazy" style="width: 100%" class="mb-4"
                                                         src="{{ asset('assets/uploads/product_images/' . $product['image']) }}"
                                                         alt="{{ $product['name'] }}" />
@@ -209,7 +209,7 @@
                                                                 <button type="submit"
                                                                     id="addtocartbutton_{{ $product['id'] }}"
                                                                     class="btn btn-secondary btn-block btn-lg">
-                                                                    اضف الي السلة
+                                                                    اضف الى السلة
                                                                 </button>
                                                             </div>
                                                         </form>

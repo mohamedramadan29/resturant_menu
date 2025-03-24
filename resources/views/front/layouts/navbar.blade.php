@@ -75,7 +75,11 @@
                     $('.modal-backdrop.show').remove();
                 });
             </script>
+            <a class="index_page" href="{{ url('/') }}">
+                <img class="mobile_logo" src="{{ asset('assets/uploads/PublicSetting/' . $public_setting->website_logo) }}" alt="" />
+            </a>
         </div>
+
 
         <a class="module module-cart right" data-bs-toggle="offcanvas" data-bs-target="#offcanvascart" role="button">
             <i class="bi bi-bag-heart-fill"></i>
@@ -143,9 +147,9 @@
                                         value="{{ $user_branch && $user_branch->car_color ? $user_branch->car_color : '' }}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="car-modal"> موديل السيارة : </label>
+                                    <label for="car-modal"> نوع السيارة : </label>
                                     <input type="text" name="car-modal" class="form-control car-modal"
-                                        placeholder="أدخل موديل السيارة"
+                                        placeholder="أدخل نوع السيارة"
                                         value="{{ $user_branch && $user_branch->car_model ? $user_branch->car_model : '' }}">
                                 </div>
                             </div>

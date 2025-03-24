@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('product_name');
             $table->decimal('product_price',8,2);
             $table->integer('product_qty');
+            $table->string('size')->nullable();
             $table->decimal('total_price',8,2);
             $table->timestamps();
         });

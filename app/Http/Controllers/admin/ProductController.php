@@ -80,6 +80,7 @@ class ProductController extends Controller
                 $product->image = $file_name;
                 $product->product_type = $data['product_type'];
                 $product->carb = $data['carb'];
+                $product->is_featured = $data['is_featured'];
                 $product->save();
                 if ($data['product_type'] == 'variable') {
                     foreach ($sizes as $index => $size) {
@@ -146,6 +147,7 @@ class ProductController extends Controller
                 $product->meta_description = $data['meta_description'];
                 $product->product_type = $data['product_type'];
                 $product->carb = $data['carb'];
+                $product->is_featured = $data['is_featured'];
                 $product->save();
 
                 // حذف الأحجام القديمة

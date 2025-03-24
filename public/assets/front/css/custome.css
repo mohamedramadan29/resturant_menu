@@ -355,6 +355,14 @@ a {
     color: #fff;
     margin-top: 26px;
 }
+@media(max-width:991px) {
+    .branch-selector {
+        justify-content: space-between;
+    }
+}
+.branch-selector .mobile_logo{
+    width: 60px;
+}
 
 .branch-selector .label {
     font-size: 14px;
@@ -520,5 +528,23 @@ input[type="radio"]:checked+.branch-item .checkmark {
     margin-top: 20px;
     border-radius: 5px;
     font-size: 16px;
+    font-weight: bold;
+}
+
+.menu-grid-item{
+    position: relative;
+    overflow: hidden;
+}
+.featured-badge{
+    position: absolute;
+    top: 10px;
+    right: -39px;
+    /* background: #fad521 !important; */
+    color: #fff;
+    /* padding: 5px 27px; */
+    border-radius: 0px;
+    font-size: 18px;
+    transform: rotate(49deg);
+    width: 126px;
     font-weight: bold;
 }

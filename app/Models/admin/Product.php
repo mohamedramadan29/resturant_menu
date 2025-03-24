@@ -18,4 +18,9 @@ class Product extends Model
         return $this->hasMany(ProductVariation::class, 'product_id');
     }
 
+    // public function getIsFeaturedAttribute()
+    // {
+    //     return $this->is_featured == 1 ? 'نعم' : 'لا';
+    // }
+
 }

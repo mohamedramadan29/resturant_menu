@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('meta_keywords')->nullable();
             $table->string('product_type')->default('simple');
             $table->string('carb')->nullable();
+            $table->tinyInteger('is_featured')->default(0);
             $table->timestamps();
         });
     }

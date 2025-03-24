@@ -91,22 +91,25 @@
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
                                                     <label for="name" class="form-label"> رقم السيارة </label>
-                                                    <input disabled required type="text" id="name" class="form-control"
-                                                        name="name" value="{{ $order['car_plate'] }}">
+                                                    <input disabled required type="text" id="name"
+                                                        class="form-control" name="name"
+                                                        value="{{ $order['car_plate'] }}">
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
                                                     <label for="name" class="form-label"> اللون </label>
-                                                    <input disabled required type="text" id="name" class="form-control"
-                                                        name="name" value="{{ $order['car_color'] }}">
+                                                    <input disabled required type="text" id="name"
+                                                        class="form-control" name="name"
+                                                        value="{{ $order['car_color'] }}">
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
                                                     <label for="name" class="form-label"> الموديل </label>
-                                                    <input disabled required type="text" id="name" class="form-control"
-                                                        name="name" value="{{ $order['car_model'] }}">
+                                                    <input disabled required type="text" id="name"
+                                                        class="form-control" name="name"
+                                                        value="{{ $order['car_model'] }}">
                                                 </div>
                                             </div>
                                         @endif
@@ -134,7 +137,13 @@
                                     <tbody>
                                         @foreach ($order['details'] as $detail)
                                             <tr>
-                                                <td> {{ $detail['product_name'] }} </td>
+                                                <td> {{ $detail['product_name'] }}
+                                                    @if ($detail['size'])
+                                                        <span class="caption badge badge-danger bg-danger">
+                                                            {{ $detail['size'] }}
+                                                        </span>
+                                                    @endif
+                                                </td>
                                                 <td> {{ $detail['product_qty'] }} </td>
                                                 <td> {{ $detail['product_price'] }} </td>
                                                 <td> {{ number_format($detail['product_qty'] * $detail['product_price'], 2) }}

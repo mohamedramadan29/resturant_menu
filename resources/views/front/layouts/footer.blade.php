@@ -13,10 +13,40 @@
                     @csrf
                     <div class="form-group">
                         <label for="phone">رقم الهاتف</label>
-                        <input type="text" name="phone" id="phone" class="form-control" placeholder="أدخل رقم الهاتف">
+                        <input required type="text" id="phone" class="form-control"
+                            placeholder="مثال: 0500000000" name="phone" value="{{ old('phone') }}" maxlength="10"
+                            oninput="validatePhoneNumber(this)">
+                        <small id="phone-error" class="text-danger" style="display: none;"> يجب أن يكون الرقم مكونًا من
+                            10 أرقام ويبدأ بـ 05 </small>
                     </div>
                     <button type="submit" class="btn btn-primary"> تسجيل الدخول </button>
                 </form>
+                <script>
+                    function validatePhoneNumber(input) {
+                        let phone = input.value;
+                        let errorMsg = document.getElementById("phone-error");
+
+                        // السماح فقط بالأرقام
+                        input.value = input.value.replace(/\D/g, '');
+
+                        // التأكد من أن الرقم يبدأ بـ 0
+                        if (input.value.length > 0 && input.value.charAt(0) !== '0') {
+                            input.value = '05';
+                        }
+
+                        // منع تجاوز 10 أرقام
+                        if (input.value.length > 10) {
+                            input.value = input.value.slice(0, 10);
+                        }
+
+                        // إظهار رسالة الخطأ إن لم يكن الرقم صحيحًا
+                        if (!/^0\d{9}$/.test(input.value)) {
+                            errorMsg.style.display = "block";
+                        } else {
+                            errorMsg.style.display = "none";
+                        }
+                    }
+                </script>
                 <form id="verifyCodeForm" style="display: none;">
                     @csrf
                     <div class="form-group">
@@ -49,7 +79,7 @@
                         // إذا كان المستخدم مسجل الدخول، انتقل إلى صفحة إتمام الطلب
                         window.location.href = '{{ url('checkout') }}';
                     } else {
-                     //   window.location.href = '{{ url('checkout') }}';
+                        //   window.location.href = '{{ url('checkout') }}';
                         // إذا لم يكن مسجل الدخول، عرض المودال
                         $('#offcanvascart').removeClass('show');
                         $('#offcanvascart').hide();
@@ -150,6 +180,10 @@
                     class="icon icon-social icon-circle icon-sm icon-twitter"> <i class="bi bi-tiktok"></i> </a>
                 <a href="https://www.instagram.com/tragaif/"
                     class="icon icon-social icon-circle icon-sm icon-instagram"><i class="bi bi-instagram"></i></a>
+                <br>
+                <a href="#" class="d-block" style="margin-top: 10px">
+                    <img width="50px" src="{{ asset('assets/uploads/vat.svg') }}" alt="">
+                </a>
             </div>
             <div class="col-lg-5 col-md-6">
                 <h5 class="text-muted" style="margin-top: 15px"> روابط </h5>

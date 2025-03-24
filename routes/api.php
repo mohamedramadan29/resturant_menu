@@ -2,7 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Broadcast;
 
+use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,4 +18,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Broadcast::routes(['middleware' => ['auth:admin']]);
+
+
+Route::get('/test-auth', function () {
+    return response()->json([
+        'web_user' => Auth::user(),
+        'admin_user' => Auth::guard('admin')->user(),
+    ]);
 });

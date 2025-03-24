@@ -43,6 +43,7 @@ class OrderController extends Controller
         $coupon_amount = Session::has('coupon_amount') ? Session::get('coupon_amount') : 0;
         $coupon = Session::has('coupon_code') ? Session::get('coupon_code') : null;
         $cartItems = Cart::getcartitems();
+       // dd($cartItems);
         $total_price = Cart::getcarttotal();
         $rules = [
             'name' => 'required',
@@ -90,6 +91,7 @@ class OrderController extends Controller
             $order_details->product_price = $item['price'];
             $order_details->product_qty = $item['qty'];
             $order_details->total_price = $item['total_price'];
+            $order_details->size = $item['size'];
             $order_details->save();
         }
 

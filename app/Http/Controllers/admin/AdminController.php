@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
-
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -45,13 +45,12 @@ class AdminController extends Controller
 
 
             if (Auth::guard('admin')->attempt(['email' => $email, 'password' => $password])) {
-                if (Auth::guard('admin')->user()->account_type == 'vendor' && Auth::guard('admin')->user()->status == '0') {
+                if (Auth::guard('admin')->user()->account_type == 'casher' && Auth::guard('admin')->user()->status == '0') {
                     $this->Error_message(' من فضلك انتظر التفعيل من الادارة   ');
                 } else {
                     return redirect('admin/dashboard');
                 }
             } else {
-
                 //$this->Error_message(' لا يوجد حساب بهذه البيانات  ');
                 return Redirect::back()->withInput()->withErrors('لا يوجد حساب بهذه البيانات  ');
             }

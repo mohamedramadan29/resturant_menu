@@ -80,9 +80,18 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="mb-3">
-                                            <label for="carb" class="form-label"> السعرات الحرارية  </label>
-                                            <input type="text" id="carb" name="carb"
-                                                class="form-control" placeholder="" value="{{ old('carb') }}">
+                                            <label for="carb" class="form-label"> السعرات الحرارية </label>
+                                            <input type="text" id="carb" name="carb" class="form-control"
+                                                placeholder="" value="{{ old('carb') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="is_featured" class="form-label"> منتج مميز </label>
+                                            <select name="is_featured" id="is_featured" class="form-select">
+                                                <option value="0" selected> لا </option>
+                                                <option value="1"> نعم </option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>

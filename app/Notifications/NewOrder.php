@@ -27,7 +27,7 @@ class NewOrder extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['database', 'broadcast'];
     }
 
     /**
@@ -41,16 +41,27 @@ class NewOrder extends Notification
             ->line('Thank you for using our application!');
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(object $notifiable): array
     {
         return [
             'order_id' => $this->order_id,
             'title' => ' طلب جديد علي الموقع الالكتروني ::  ',
+            'url' => url('admin/order/update/' . $this->order_id),
         ];
     }
+
+    public function toBroadcast()
+    {
+        return [
+            'order_id' => $this->order_id,
+            'title' => ' طلب جديد علي الموقع الالكتروني ::  ',
+            'url' => url('admin/order/update/' . $this->order_id),
+        ];
+    }
+
+    /////// Change Channel Name
+     public function broadcastType()
+     {
+        return 'App.Models.admin.' . $this->order_id;
+     }
 }

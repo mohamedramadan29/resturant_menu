@@ -84,9 +84,20 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="mb-3">
-                                            <label for="carb" class="form-label"> السعرات الحرارية  </label>
-                                            <input type="text" id="carb" name="carb"
-                                                class="form-control" placeholder="" value="{{ $product['carb'] }}">
+                                            <label for="carb" class="form-label"> السعرات الحرارية </label>
+                                            <input type="text" id="carb" name="carb" class="form-control"
+                                                placeholder="" value="{{ $product['carb'] }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="is_featured" class="form-label"> منتج مميز </label>
+                                            <select name="is_featured" id="is_featured" class="form-select">
+                                                <option @if ($product['is_featured'] == 0) selected @endif value="0"> لا
+                                                </option>
+                                                <option @if ($product['is_featured'] == 1) selected @endif value="1"> نعم
+                                                </option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -126,7 +137,8 @@
                                         <select name="product_type" id="product-type" class="form-select">
                                             <option value="simple" @if ($product['product_type'] == 'simple') selected @endif>بسيط
                                             </option>
-                                            <option value="variable" @if ($product['product_type'] == 'variable') selected @endif>متغير
+                                            <option value="variable" @if ($product['product_type'] == 'variable') selected @endif>
+                                                متغير
                                             </option>
                                         </select>
                                     </div>

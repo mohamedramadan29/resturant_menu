@@ -37,6 +37,20 @@
     <link id="theme" rel="stylesheet" href="{{ asset('assets/front/css/theme-beige.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/front/css/custome.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <script>
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('707be48246a0581627c1', {
+            cluster: 'eu'
+        });
+
+        // var channel = pusher.subscribe('my-channel');
+        // channel.bind('my-event', function(data) {
+        //     alert(JSON.stringify(data));
+        // });
+    </script>
     @toastifyCss
     @yield('css')
 </head>
