@@ -8,6 +8,7 @@ use \App\Http\Controllers\front\FrontController;
 use App\Http\Controllers\front\MessageController;
 use App\Http\Controllers\front\OrderController;
 use App\Http\Controllers\front\SetBranchController;
+use App\Http\Controllers\testpaymentcontroller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -43,6 +44,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::controller(OrderController::class)->group(function () {
         Route::post('order/store', 'store');
         Route::get('thanks', 'thanks');
+        Route::post('/payment/response', 'handlePaymentResponse')->name('payment.response');
+        Route::get('/payment-success',  'success')->name('payment.success');
+Route::get('/payment-failed', 'failed')->name('payment.failed');
+
+Route::get('/payment/process', 'paymentProcess')->name('payemnt.process');
+Route::match(['GET', 'POST'], '/payment/callback', 'callBack');
+
     });
 
     ////////////////////////// User Dashbpard
@@ -50,7 +58,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('account', 'account')->name('account');
         Route::get('logout', 'logout')->name('user.logout');
     });
+
 });
+
 
 Route::view('terms', 'front.terms');
 Route::view('privacy-policy', 'front.privacy-policy');
@@ -71,7 +81,7 @@ Route::get('/getBranchSession', function () {
 
 Route::controller(SetBranchController::class)->group(function () {
     Route::post('/setBranchSession', 'setBranchSession')->name('setBranchSession');
-   // Route::get('/getBranchSession', 'getBranchSession')->name('getBranchSession');
+    // Route::get('/getBranchSession', 'getBranchSession')->name('getBranchSession');
 });
 
 

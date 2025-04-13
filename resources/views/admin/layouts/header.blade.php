@@ -32,7 +32,6 @@
     @if (Auth::guard('admin')->check())
         <script>
             admin_id = "{{ \Illuminate\Support\Facades\Auth::guard('admin')->user()->id }}";
-
             //  alert(window.admin_id);
         </script>
         <script src="{{ asset('build/assets/app-B19uNHDu.js') }}"></script>

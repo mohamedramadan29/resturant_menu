@@ -22,13 +22,24 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
-
+use App\Interfaces\PaymentGatewayInterface;
 class OrderController extends Controller
 {
     use Message_Trait;
 
+    protected PaymentGatewayInterface $paymentGateway;
+
+    public function __construct(PaymentGatewayInterface $paymentGateway)
+    {
+
+        $this->paymentGateway = $paymentGateway;
+    }
+
+
+
     public function store(Request $request)
     {
+        $transaction_id = uniqid();
         $data = $request->all();
         $user = User::where('phone', $data['phone'])->first();
         $user_branch = UserBranchDetail::where('user_id', $user->id)->first();
@@ -39,12 +50,12 @@ class OrderController extends Controller
         if ($branch->isOpen() == false) {
             return Redirect::back()->withInput()->withErrors('الفرع مغلق في الوقت الحالي');
         }
-        // dd($data);
-        $coupon_amount = Session::has('coupon_amount') ? Session::get('coupon_amount') : 0;
-        $coupon = Session::has('coupon_code') ? Session::get('coupon_code') : null;
+
+        $coupon_amount = Session::get('coupon_amount', 0);
+        $coupon = Session::get('coupon_code');
         $cartItems = Cart::getcartitems();
-       // dd($cartItems);
         $total_price = Cart::getcarttotal();
+
         $rules = [
             'name' => 'required',
             'phone' => 'required',
@@ -60,14 +71,17 @@ class OrderController extends Controller
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withErrors($validator);
         }
+
         DB::beginTransaction();
         $order = new Order();
-        $order->user_id = Auth::user()->id;
+        $order->user_id = Auth::id();
+        $order->transaction_id = $transaction_id;
         $order->name = $data['name'];
         $order->phone = $data['phone'];
         $order->notes = $data['notes'];
         $order->time_delivery = 'now';
         $order->payment_method = $data['payment_type'];
+        $order->payment_status = 'pending';
         $order->coupon_code = $coupon;
         $order->coupon_amount = $coupon_amount;
         $order->order_status = 'لم يبدا';
@@ -79,43 +93,67 @@ class OrderController extends Controller
         $order->car_color = $user_branch->car_color ?? null;
         $order->car_model = $user_branch->car_model ?? null;
         $order->save();
-        $user->name = $data['name'];
-        $user->save();
+        // خزّن الـ transaction_id أو order_id في السيشن
+        Session::put('transaction_id', $transaction_id);
+        Session::put('order_id', $order->id);
 
         foreach ($cartItems as $item) {
-            $order_details = new OrderDetail();
-            $order_details->order_id = $order->id;
-            $order_details->product_id = $item['product_id'];
-            $getproductdata = Product::where('id', $item['product_id'])->first();
-            $order_details->product_name = $getproductdata['name'];
-            $order_details->product_price = $item['price'];
-            $order_details->product_qty = $item['qty'];
-            $order_details->total_price = $item['total_price'];
-            $order_details->size = $item['size'];
-            $order_details->save();
+            OrderDetail::create([
+                'order_id' => $order->id,
+                'product_id' => $item['product_id'],
+                'product_name' => Product::find($item['product_id'])->name ?? 'منتج',
+                'product_price' => $item['price'],
+                'product_qty' => $item['qty'],
+                'total_price' => $item['total_price'],
+                'size' => $item['size'],
+            ]);
         }
 
-        ////////////////////// Send Confirmation Email ///////////////////////////////
-        ///
-        // $public_setting = PublicSetting::first();
-        // $admin_email = $public_setting['website_email'];
-        // $email = $admin_email;
-
-        // $MessageDate = [
-        //     'name' => $data['name'],
-        //     "address" => $data['address'],
-        //     'phone' => $data['phone'],
-        //     'grand_total'=>$data['grand_total'],
-        // ];
-        // Mail::send('front.mails.newordertoadmin', $MessageDate, function ($message) use ($email) {
-        //     $message->to($email)->subject(' لديك طلب جديد علي متجرك ');
-        // });
         DB::commit();
-        $admin = admin::all();
-        Notification::send($admin, new NewOrder($order->id));
-        Session::put('order_id', $order->id);
-        return redirect('thanks');
-        // return $this->success_message(' تم اضافة الطلب الخاص بك بنجاح  ');
+
+        return Redirect()->route('payemnt.process', ['amount' => $total_price]);
+
+    }
+
+    public function paymentProcess(Request $request)
+    {
+        return $this->paymentGateway->sendPayment($request);
+    }
+    public function callBack(Request $request): \Illuminate\Http\RedirectResponse
+    {
+        $response = $this->paymentGateway->callBack($request);
+        if ($response) {
+
+            // $orderId = Session::get('order_id'); // استرجاع order_id من السيشن
+            // if ($orderId) {
+            //     $order = Order::find($orderId);
+            //     if ($order) {
+            //         $order->payment_status = 'paid';
+            //         $order->save();
+            //     }
+            // }
+            // Session::forget('transaction_id');
+            // Session::forget('order_id');
+
+            return redirect()->route('payment.success');
+        }
+        return redirect()->route('payment.failed');
+    }
+
+
+    public function success()
+    {
+
+        // Session::forget('transaction_id');
+        // Session::forget('order_id');
+        return view('front.payment.success');
+    }
+    public function failed(Request $request)
+    {
+        // dd($request->all());
+        // Session::forget('transaction_id');
+        // Session::forget('order_id');
+        return view('front.payment.failed');
     }
 
     public function thanks()

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\testpaymentcontroller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Broadcast;
@@ -22,10 +23,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Broadcast::routes(['middleware' => ['auth:admin']]);
 
-
-Route::get('/test-auth', function () {
-    return response()->json([
-        'web_user' => Auth::user(),
-        'admin_user' => Auth::guard('admin')->user(),
-    ]);
-});
+Route::post('/payment/process', [testpaymentcontroller::class, 'paymentProcess']);
+Route::match(['GET', 'POST'], '/payment/callback', [testpaymentcontroller::class, 'callBack']);
