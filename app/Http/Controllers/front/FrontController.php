@@ -12,7 +12,7 @@ class FrontController extends Controller
     public  function index()
     {
         $categories = Category::all()->map(function ($category){
-            $category->products = $category->products()->get();
+            $category->products = $category->products()->latest()->get();
             return $category;
         });
        // dd($categories);

@@ -47,6 +47,7 @@
                                             <th> اسم المنتج </th>
                                             <th> القسم </th>
                                             <th> السعر </th>
+                                            <th> الخصم </th>
                                             <th> الصورة </th>
                                             <th> المنتج مميز </th>
                                             <th> العمليات</th>
@@ -64,7 +65,14 @@
                                                 <td><a href="{{ url('admin/product/update/' . $product['slug']) }}"></a>
                                                     {{ $product['name'] }} </td>
                                                 <td> {{ $product['Main_Category']['name'] }} </td>
-                                                <td> {{ $product['price'] }} </td>
+                                                <td>
+                                                    @if($product['product_type']== 'simple')
+                                                    {{ $product['price'] }} $
+                                                    @else
+                                                    منتج متغير
+                                                    @endif
+                                                     </td>
+                                                <td> {{ $product['discount'] ?? 0 }} $ </td>
                                                 <td>
                                                     <img class="img-thumbnail"
                                                         src="{{ asset('assets/uploads/product_images/' . $product['image']) }}"

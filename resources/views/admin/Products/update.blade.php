@@ -153,6 +153,14 @@
                                                     placeholder="000" value="{{ $product['price'] }}">
                                             </div>
                                         </div>
+                                        <div class="col-lg-6">
+                                            <label for="product-price" class="form-label"> اضافة خصم </label>
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
+                                                <input type="number" id="discount" name="discount" class="form-control"
+                                                    placeholder="000" value="{{ $product['discount'] }}">
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div id="variable-product-fields">

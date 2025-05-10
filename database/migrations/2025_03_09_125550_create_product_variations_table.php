@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
             $table->string('size');
             $table->double('price', 8, 2);
+            $table->double('discount',8,2);
             $table->timestamps();
         });
     }

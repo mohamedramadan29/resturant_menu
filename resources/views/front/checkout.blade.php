@@ -117,15 +117,15 @@
                                     <div class="form-group col-sm-6">
                                         <label> الاسم :</label>
                                         <input required type="text" class="form-control" name="name"
-                                            value="{{ Auth::user()->name }}">
+                                            value="{{ old('name', Auth::user()->name) }}">
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label> رقم الهاتف :</label>
-                                        <input readonly type="text" class="form-control" name="phone"
-                                            value="{{ Auth::user()->phone }}">
+                                        <input type="text" class="form-control" name="phone" placeholder="05xxxxxxx"
+                                            value="{{ old('phone', Auth::user()->phone) }}">
                                     </div>
                                     <div class="form-group col-sm-6">
-                                        <label> ملاحظات : </label>
+                                        <label> ملاحظات على طلبك : </label>
                                         <textarea name="notes" id="" cols="10" rows="4" class="form-control"></textarea>
                                     </div>
                                 </div>

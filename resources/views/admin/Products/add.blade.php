@@ -138,6 +138,14 @@
                                                     class="form-control" placeholder="">
                                             </div>
                                         </div>
+                                        <div class="col-lg-6">
+                                            <label for="product-price" class="form-label"> اضافة خصم </label>
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
+                                                <input step="0.01" type="number" id="discount" name="discount"
+                                                    class="form-control" placeholder="">
+                                            </div>
+                                        </div>
                                     </div>
                                     <div id="variable-product-fields" style="display: none">
                                         <div class="col-lg-6">

@@ -28,322 +28,118 @@
         </div>
 
         <!-- Page Content -->
+        <!-- Page Content -->
         <div class="page-content">
             <div class="container">
-                <div class="row no-gutters">
-                    <div id="categories-menu" class="categories-container">
-                        <ul class="list-unstyled all_categories">
-                            @foreach ($categories as $category)
-                                <li><a href="#{{ $category['slug'] }}">{{ $category['name'] }}</a></li>
-                            @endforeach
-                        </ul>
-                    </div>
-
-
-                    <div class="col-md-12">
-                        @foreach ($categories as $category)
-                            <!-- Category Details -->
-                            <div id="{{ $category['slug'] }}" class="menu-category">
-                                <div class="menu-category-content padded">
-                                    <div class="row gutters-sm">
-                                        @foreach ($category['products'] as $product)
-                                            <div class="col-lg-3 col-12">
-                                                <!-- Menu Item -->
-                                                <div class="menu-item menu-grid-item">
-                                                    @if ($product['is_featured'] == 1)
-                                                        <span class="badge bg-success featured-badge">مميز</span> 
-                                                    @endif
-                                                    <img loading="lazy" style="width: 100%" class="mb-4"
-                                                        src="{{ asset('assets/uploads/product_images/' . $product['image']) }}"
-                                                        alt="{{ $product['name'] }}" />
-                                                    <h6 class="mb-0">{{ $product['name'] }}</h6>
-                                                    <div class="row align-items-center mt-4">
-                                                        <div class="col-6">
-                                                            @if ($product['product_type'] == 'variable')
-                                                                @foreach ($product->variations as $variation)
-                                                                    <span class="text-md mr-4">
-                                                                        <span class="text-muted"></span> <span
-                                                                            data-product-base-price class="product-price">
-                                                                            {{ number_format($variation['price'], 2) }}
-                                                                        </span> <img loading="lazy" width="20px"
-                                                                            src="{{ asset('assets/uploads/riyal.svg') }}"
-                                                                            alt="">
-                                                                    </span>
-                                                                @endforeach
-                                                            @else
-                                                                <span class="text-md mr-4">
-                                                                    <span class="text-muted"></span> <span
-                                                                        data-product-base-price class="product-price">
-                                                                        {{ number_format($product['price'], 2) }}
-                                                                    </span> <img loading="lazy" width="20px"
-                                                                        src="{{ asset('assets/uploads/riyal.svg') }}"
-                                                                        alt="">
-                                                            @endif
-                                                        </div>
-                                                        <div class="col-6 text-sm-right mt-2 mt-sm-0">
-                                                            <button class="btn btn-secondary btn-sm add_to_cart"
-                                                                data-action="open-cart-modal" data-bs-toggle="modal"
-                                                                data-bs-target="#product-modal_{{ $product['id'] }}"
-                                                                data-id="1">
-                                                                <span> تفاصيل المنتج </span>
-                                                            </button>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!----------------------- Product Model -------------->
-                                            <!-- Modal / Product -->
-                                            <div class="modal fade product-modal" id="product-modal_{{ $product['id'] }}"
-                                                tabindex="-1" role="dialog" aria-hidden="true"
-                                                aria-labelledby="exampleModalLabel" tabindex="-1">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header d-flex justify-content-between">
-                                                            <h1 class="modal-title fs-5" id="exampleModalLabel">
-                                                                {{ $product['name'] }}
-                                                            </h1>
-                                                            <button style="margin:0;" type="button" class="btn-close"
-                                                                data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-product-details">
-                                                            <div class="product-image" loading="lazy"
-                                                                style="background-image: url('{{ asset('assets/uploads/product_images/' . $product['image']) }}')">
-                                                            </div>
-                                                            <div class="row align-items-center" style="padding:15px;">
-                                                                <div class="col-12">
-                                                                    <h6 class="mb-1 product-modal-name">
-                                                                        {{ $product['name'] }}</h6>
-                                                                    <span
-                                                                        class="product-modal-ingredients">{{ $product['description'] }}</span>
-                                                                    @if ($product['carb'] != null)
-                                                                        <span class="d-block" style="color:#000000">
-                                                                            <strong> السعرات الحرارية :
-                                                                                {{ $product['carb'] }} سعر حراري</strong>
-                                                                        </span>
-                                                                    @endif
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <form id="addToCart_{{ $product['id'] }}" class=""
-                                                            method="post" action="{{ route('cart.add') }}">
-                                                            <div class="quantity_section">
-                                                                <div>
-                                                                    <div class="quantity">
-                                                                        <div
-                                                                            class="quantity-control d-flex align-items-center">
-                                                                            <!-- زر تقليل العدد -->
-                                                                            <button class="decrease-quantity btn"
-                                                                                data-product-id="{{ $product['id'] }}"
-                                                                                data-product-price="{{ $product['price'] }}">
-                                                                                -
-                                                                            </button>
-                                                                            <!-- إدخال العدد -->
-                                                                            <input id="quantity-{{ $product['id'] }}"
-                                                                                type="number" value="1"
-                                                                                name="quantity" class="mx-2 text-center"
-                                                                                style="width: 60px;" min="1"
-                                                                                data-product-id="{{ $product['id'] }}"
-                                                                                data-product-price="{{ $product['price'] }}">
-                                                                            <!-- زر زيادة العدد -->
-                                                                            <button class="increase-quantity btn"
-                                                                                data-product-id="{{ $product['id'] }}"
-                                                                                data-product-price="{{ $product['price'] }}">
-                                                                                +
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <!-- تحديد الحجم إذا كان المنتج متغير -->
-                                                                @if ($product['product_type'] == 'variable')
-                                                                    <div class="price_section">
-                                                                        <label for="product-size-{{ $product['id'] }}"
-                                                                            class="form-label mt-2"> اختر الحجم </label>
-                                                                        <select required
-                                                                            class="form-select mb-3 size-select"
-                                                                            id="product-size-{{ $product['id'] }}"
-                                                                            name="size"
-                                                                            data-product-id="{{ $product['id'] }}">
-                                                                            <option value="" selected disabled>اختر
-                                                                                الحجم
-                                                                            </option> <!-- خيار افتراضي -->
-                                                                            @foreach ($product['variations'] as $variation)
-                                                                                <option value="{{ $variation['id'] }}"
-                                                                                    data-price="{{ $variation['price'] }}">
-                                                                                    {{ $variation['size'] }} -
-                                                                                    {{ number_format($variation['price'], 2) }}
-                                                                                    ريال
-                                                                                </option>
-                                                                            @endforeach
-                                                                        </select>
-                                                                    </div>
-                                                                @else
-                                                                    <div class="price_section">
-                                                                        <span id="total-price-{{ $product['id'] }}"
-                                                                            class="product-modal-price">{{ number_format($product['price'], 2) }}
-                                                                        </span>
-                                                                        <img loading="lazy"
-                                                                            src="{{ asset('assets/uploads/riyal.svg') }}"
-                                                                            style="width: 20px;" alt="riyal">
-                                                                    </div>
-                                                                @endif
-
-
-                                                            </div>
-
-                                                            @csrf
-                                                            <input type="hidden" name="product_id"
-                                                                value="{{ $product['id'] }}">
-                                                            <input type="hidden"
-                                                                id="hidden-quantity-{{ $product['id'] }}" name="number"
-                                                                value="1">
-                                                            <input type="hidden" id="hidden-price-{{ $product['id'] }}"
-                                                                name="price" value="{{ $product['price'] }}">
-
-                                                            @if ($product['product_type'] == 'variable')
-                                                                <input type="hidden"
-                                                                    id="hidden-size-{{ $product['id'] }}" name="size">
-                                                            @endif
-
-                                                            <div class="row align-items-center">
-                                                                <button type="submit"
-                                                                    id="addtocartbutton_{{ $product['id'] }}"
-                                                                    class="btn btn-secondary btn-block btn-lg">
-                                                                    اضف الى السلة
-                                                                </button>
-                                                            </div>
-                                                        </form>
-                                                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                                                        <script>
-                                                            // $(document).ready(function() {
-                                                            //     $(".form-select").on('change', function() {
-                                                            //         var selectedSize = $(this).val();
-                                                            //         var productId = $(this).data("product-id");
-
-                                                            //         $("#hidden-size-" + productId).val(selectedSize);
-                                                            //     });
-                                                            //     $("#addtocartbutton_{{ $product['id'] }}").on('click', function(e) {
-                                                            //         e.preventDefault();
-
-                                                            //         $.ajax({
-                                                            //             url: '{{ route('cart.add') }}',
-                                                            //             method: 'POST',
-                                                            //             headers: {
-                                                            //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                                            //             },
-                                                            //             data: $("#addToCart_{{ $product['id'] }}").serialize(),
-                                                            //             success: function(response) {
-                                                            //                 Toastify({
-                                                            //                     text: response.message,
-                                                            //                     duration: 3000,
-                                                            //                     gravity: "top",
-                                                            //                     position: "right",
-                                                            //                     backgroundColor: "#4CAF50",
-                                                            //                 }).showToast();
-
-                                                            //                 if (response.cartCount) {
-                                                            //                     $('.cart-icon .notification1').text(response.cartCount);
-                                                            //                 }
-                                                            //                 updateCartModal();
-                                                            //                 $('.product-modal').hide();
-                                                            //                 $('.modal-backdrop').remove();
-                                                            //                 $('body').css('overflow', 'auto');
-                                                            //             },
-                                                            //             error: function(xhr, status, error) {
-                                                            //                 Toastify({
-                                                            //                     text: "حدث خطأ أثناء إضافة المنتج للسلة",
-                                                            //                     duration: 3000,
-                                                            //                     gravity: "top",
-                                                            //                     position: "right",
-                                                            //                     backgroundColor: "#FF5733",
-                                                            //                 }).showToast();
-                                                            //             }
-                                                            //         });
-                                                            //     });
-
-                                                            //     function updateCartCount(cartCount) {
-                                                            //         $('.cart-icon .notification').text(cartCount);
-                                                            //     }
-
-                                                            //     function updateCartModal() {
-                                                            //         $.ajax({
-                                                            //             url: '/cart/items',
-                                                            //             method: 'GET',
-                                                            //             success: function(response) {
-                                                            //                 if (response.html) {
-                                                            //                     $('#panel-cart .cart-details').html(response.html);
-                                                            //                 }
-
-                                                            //                 if (response.cartCount) {
-                                                            //                     updateCartCount(response.cartCount);
-                                                            //                 }
-                                                            //             },
-                                                            //             error: function(xhr, status, error) {
-                                                            //                 console.error('خطأ في تحديث السلة:', error);
-                                                            //             }
-                                                            //         });
-                                                            //     }
-                                                            //     $(".form-select").on('change', function() {
-                                                            //         var selectedOption = $(this).find(":selected");
-                                                            //         var newPrice = selectedOption.data("price");
-                                                            //         var productId = $(this).data("product-id");
-
-                                                            //         // تحديث السعر المعروض
-                                                            //         $("#total-price-" + productId).text(newPrice.toFixed(2));
-
-                                                            //         // تحديث قيمة السعر المخفية ليتم إرسالها إلى السلة
-                                                            //         $("#hidden-price-" + productId).val(newPrice);
-                                                            //     });
-                                                            // });
-                                                        </script>
-                                                        <script>
-                                                            $(document).ready(function() {
-                                                                $(".size-select").on('change', function() {
-                                                                    var selectedOption = $(this).find(":selected");
-                                                                    var newPrice = selectedOption.data("price");
-                                                                    var productId = $(this).data("product-id");
-
-                                                                    if (selectedOption.val() !== "") { // تأكد من أن الحجم ليس الخيار الافتراضي
-                                                                        $("#hidden-price-" + productId).val(newPrice);
-                                                                        $("#hidden-size-" + productId).val(selectedOption.val());
-                                                                    }
-                                                                });
-
-
-                                                                // منع الإرسال فقط إذا كان المنتج من النوع variable
-                                                                $("#addToCart_{{ $product['id'] }}").on("submit", function(e) {
-                                                                    var productType = @json($product['product_type']); // استرجاع نوع المنتج
-                                                                    if (productType === 'variable') {
-                                                                        var productId = $(this).find(".size-select").data("product-id");
-                                                                        var selectedSize = $("#hidden-size-" + productId).val();
-                                                                        if (!selectedSize) {
-                                                                            alert("يرجى اختيار الحجم قبل إضافة المنتج إلى السلة.");
-                                                                            e.preventDefault(); // منع الإرسال
-                                                                        }
-                                                                    }
-                                                                });
-                                                            });
-                                                        </script>
-
-
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!--------------------- End Product Model ---------------->
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
+                <!-- Tabs for categories -->
+                <div class="categories-tabs mb-4">
+                    <ul class="nav nav-tabs overflow-auto flex-nowrap" id="categoryTabs" role="tablist"
+                        style="padding-right: 0">
+                        @foreach ($categories as $index => $category)
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link @if ($index == 0) active @endif"
+                                    id="tab-{{ $category['slug'] }}" data-bs-toggle="tab"
+                                    data-bs-target="#content-{{ $category['slug'] }}" type="button" role="tab">
+                                    {{ $category['name'] }}
+                                </button>
+                            </li>
                         @endforeach
-                    </div>
+                    </ul>
+                </div>
+
+                <!-- Tab Content for products -->
+                <div class="tab-content" id="categoryTabsContent">
+                    @foreach ($categories as $index => $category)
+                        <div class="tab-pane fade @if ($index == 0) show active @endif"
+                            id="content-{{ $category['slug'] }}" role="tabpanel">
+                            <div class="row">
+                                @foreach ($category['products'] as $product)
+                                    <div class="col-lg-3 col-md-4 col-6 mb-4">
+                                        <div class="menu-item menu-grid-item">
+                                            @if ($product['is_featured'] == 1)
+                                                <span class="badge bg-success featured-badge">مميز</span>
+                                            @endif
+                                            <img loading="lazy" class="img-fluid mb-2"
+                                                src="{{ asset('assets/uploads/product_images/' . $product['image']) }}"
+                                                alt="{{ $product['name'] }}" />
+                                            <h6 class="text-truncate">{{ $product['name'] }}</h6>
+                                            <div class="d-flex justify-content-between align-items-center m-2">
+                                                <span class="">
+                                                    @if ($product['discount'] > 0)
+                                                        <span class="text-muted">
+                                                            <s>
+                                                                <strong>{{ number_format($product['price'], 2) }} </strong>
+                                                            </s>
+                                                        </span>
+                                                        <strong>{{ number_format($product['price'] - $product['discount'], 2) }}
+                                                        </strong>
+                                                        <img loading="lazy" src="{{ asset('assets/uploads/riyal.svg') }}"
+                                                            width="15">
+                                                    @else
+                                                        <strong>{{ number_format($product['price'], 2) }} </strong>
+                                                        <img loading="lazy" src="{{ asset('assets/uploads/riyal.svg') }}"
+                                                            width="15">
+                                                    @endif
+                                                </span>
+                                                <button class="btn btn-sm btn-secondary" data-bs-toggle="modal"
+                                                    data-bs-target="#product-modal_{{ $product['id'] }}">
+                                                    تفاصيل
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @include('front.partials.product-modal', ['product' => $product])
+                                @endforeach
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>
+
     </div>
+
     <!-- Content / End -->
 
     </div>
+    <style>
+        /* تحسين مظهر التابات */
+        .categories-tabs .nav-tabs {
+            border-bottom: none;
+        }
+
+        .categories-tabs .nav-link {
+            white-space: nowrap;
+            margin-right: 8px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 30px;
+            padding: 8px 20px;
+            font-weight: bold;
+            color: #333;
+            transition: 0.3s;
+        }
+
+        .categories-tabs .nav-link.active {
+            background-color: #fbd51e;
+            color: #000;
+            font-weight: bold
+        }
+
+        /* Scroll لطيف للتابات */
+        .categories-tabs .nav-tabs {
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        .categories-tabs .nav-tabs::-webkit-scrollbar {
+            display: none;
+            /* Chrome/Safari/Webkit */
+        }
+    </style>
+
 @endsection
 @section('js')
     <script>

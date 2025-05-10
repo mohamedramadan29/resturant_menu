@@ -12,6 +12,7 @@ use App\Http\Controllers\testpaymentcontroller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+
 Route::controller(FrontController::class)->group(function () {
     Route::get('/', 'index')->name('index');
 });
@@ -46,10 +47,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('thanks', 'thanks');
         Route::post('/payment/response', 'handlePaymentResponse')->name('payment.response');
         Route::get('/payment-success',  'success')->name('payment.success');
-Route::get('/payment-failed', 'failed')->name('payment.failed');
+        Route::get('/payment-failed', 'failed')->name('payment.failed');
 
-Route::get('/payment/process', 'paymentProcess')->name('payemnt.process');
-Route::match(['GET', 'POST'], '/payment/callback', 'callBack');
+        Route::get('/payment/process', 'paymentProcess')->name('payemnt.process');
+        //Route::match(['GET', 'POST'], '/payment/callback', 'callBack');
+        Route::match(['GET', 'POST'], '/payment/callback', 'callBack')->name('payment.callback');
 
     });
 
@@ -58,7 +60,6 @@ Route::match(['GET', 'POST'], '/payment/callback', 'callBack');
         Route::get('account', 'account')->name('account');
         Route::get('logout', 'logout')->name('user.logout');
     });
-
 });
 
 

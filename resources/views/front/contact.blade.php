@@ -34,7 +34,7 @@
                                             الرياض - حي الأندلس </a>
                                     </li>
                                     <li>
-                                        <a href="tel:552147147"> <i class="bi bi-telephone"></i> 552147147 </a>
+                                        <a href="tel:0580168343"> <i class="bi bi-telephone"></i> 0580168343 </a>
                                     </li>
                                     <li>
                                         <a href="mailto:Traghaif@gmail.com"> <i class="bi bi-envelope"></i>

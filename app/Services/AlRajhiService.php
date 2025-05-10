@@ -39,8 +39,9 @@ class AlRajhiService extends BasePaymentService implements PaymentGatewayInterfa
                 "action" => "1",
                 "currencyCode" => "682",
                 "errorURL" => route('payment.failed'),
-                "responseURL" => $request->getSchemeAndHttpHost() . "/api/payment/callback",
-                "trackId" => uniqid(),
+               // "responseURL" => $request->getSchemeAndHttpHost() . "/api/payment/callback",
+               "responseURL" => route('payment.callback'),
+               "trackId" => uniqid(),
                 "amt" => $amount
             ]
         ];
@@ -52,7 +53,8 @@ class AlRajhiService extends BasePaymentService implements PaymentGatewayInterfa
                 "id" => $this->id,
                 "trandata" => $encryptedData,
                 "errorURL" => route('payment.failed'),
-                "responseURL" => $request->getSchemeAndHttpHost() . "/api/payment/callback",
+               // "responseURL" => $request->getSchemeAndHttpHost() . "/api/payment/callback",
+               "responseURL" => route('payment.callback'),
             ]
         ];
 

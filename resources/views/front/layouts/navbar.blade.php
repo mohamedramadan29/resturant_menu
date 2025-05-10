@@ -174,7 +174,7 @@
                                         <span class="checkmark">✔</span>
                                         <div class="icons">
                                             <a href="tel:{{ $branch['phone'] }}"><i class="bi bi-telephone"></i> </a>
-                                            <a href="https://www.google.com/maps/place/24%C2%B050'52.1%22N+46%C2%B040'58.6%22E/@24.847832,46.6829274,20z/data=!4m4!3m3!8m2!3d24.847803!4d46.6829564?entry=ttu&g_ep=EgoyMDI0MDkzMC4wIKXMDSoASAFQAw%3D%3D"
+                                            <a href="{{ $branch['map_link'] }}"
                                                 target="_blank"><i class="bi bi-geo-alt"></i> </a>
                                             <span>
                                                 @if ($branch->isOpen())

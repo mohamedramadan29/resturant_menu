@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\front;
 
-use App\Http\Controllers\Controller;
-use App\Http\Traits\Message_Trait;
-use App\Models\admin\ProductVariation;
 use App\Models\front\Cart;
 use Illuminate\Http\Request;
+use App\Models\admin\Product;
+use App\Http\Traits\Message_Trait;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
+use App\Models\admin\ProductVariation;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
 
 class CartController extends Controller
 {
@@ -27,16 +28,25 @@ class CartController extends Controller
     {
         $cartData = $request->all();
         $product_id = $request->input('product_id');
+        $product = Product::find($product_id);
+        if ($product->discount > 0) {
+            $price = $product->price - $product->discount;
+        } else {
+            $price = $product->price;
+        }
         $number = $request->input('number');
-        $price = $request->input('price');
         $vartion_price = null;
         $vartion_size = null;
         $size = null;
         if ($request->has('size')) {
             $vartion = ProductVariation::where('id', $request->input('size'))->first();
             $vartion_price = $vartion->price;
+            if ($vartion->discount > 0) {
+                $price = $vartion->price - $vartion->discount;
+            } else {
+                $price = $vartion->price;
+            }
             $vartion_size = $vartion->size;
-            $price = $vartion_price;
             $size = $vartion_size;
             //dd($price, $size);
         }
@@ -69,7 +79,7 @@ class CartController extends Controller
             $cartItem->qty += $number;  // زيادة الكمية (يمكنك تعديلها حسب الحاجة)
             $cartItem->total_price = $cartItem->qty * $cartItem->price;  // تحديث السعر الإجمالي
             $cartItem->save();  // حفظ التحديثات
-             return $this->success_message(' تم تحديث المنتج في السلة  ');
+            return $this->success_message(' تم تحديث المنتج في السلة  ');
             // return response()->json([
             //     'message' => 'تم تحديث المنتج في السلة بنجاح',
             //     'cartCount' => Cart::where('session_id', $session_id)->count()  // إرسال العدد المحدث للسلة

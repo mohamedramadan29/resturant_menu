@@ -108,9 +108,7 @@ class OrderController extends Controller
                 'size' => $item['size'],
             ]);
         }
-
         DB::commit();
-
         return Redirect()->route('payemnt.process', ['amount' => $total_price]);
 
     }
