@@ -11,11 +11,11 @@ class FrontController extends Controller
 {
     public  function index()
     {
-        $categories = Category::all()->map(function ($category){
-            $category->products = $category->products()->latest()->get();
+        $categories = Category::all()->map(function ($category) {
+            $category->products = $category->products()->where('status', 1)->latest()->get();
             return $category;
         });
-       // dd($categories);
-        return view('front.index',compact('categories'));
+        // dd($categories);
+        return view('front.index', compact('categories'));
     }
 }

@@ -64,10 +64,21 @@
                         </div>
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title"> طريقة الاستلام </h4>
+                                <h4 class="card-title"> طريقة الاستلام ونوع الدفع </h4>
                             </div>
                             <div class="card-body">
                                 <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label"> نوع الدفع </label>
+                                            @if ($order['payment_method'] == 'cash')
+                                                <span class="badge badge-success bg-success"> الدفع عند الاستلام </span>
+                                            @else
+                                                <span class="badge badge-danger bg-danger"> الدفع الالكتروني </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
                                     <div class="col-lg-6">
                                         <div class="mb-3">
                                             <label for="name" class="form-label"> الفرع </label>

@@ -56,6 +56,8 @@
                                             {{-- <th> قيمة الشحن   </th> --}}
                                             <th> الاجمالي </th>
                                             <th> حالة الطلب </th>
+                                            <th> نوع الدفع </th>
+                                            <th> تاريخ الطلب </th>
                                             <th> العمليات</th>
                                         </tr>
                                     </thead>
@@ -85,6 +87,14 @@
                                                             {{ $order['order_status'] }} </span>
                                                     @endif
                                                 </td>
+                                                <td>
+                                                    @if ($order['payment_method'] == 'cash')
+                                                        <span class="badge badge-success bg-success"> الدفع عند الاستلام </span>
+                                                    @else
+                                                        <span class="badge badge-danger bg-danger"> الدفع الالكتروني </span>
+                                                    @endif
+                                                </td>
+                                                <td> {{ $order['created_at']->diffForHumans() }} </td>
                                                 <td>
                                                     <div class="d-flex gap-2">
                                                         <a href="{{ url('admin/order/update/' . $order['id']) }}"

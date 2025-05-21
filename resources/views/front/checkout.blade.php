@@ -140,6 +140,14 @@
                                             <span class="custom-control-description">الدفع الالكتروني </span>
                                         </label>
                                     </div>
+                                    <div class="col-md-4 col-sm-6 form-group">
+                                        <label class="custom-control custom-radio">
+                                            <input type="radio" name="payment_type" class="custom-control-input"
+                                                value="cash">
+                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-description">الدفع عند الاستلام </span>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                             <div class="text-center">

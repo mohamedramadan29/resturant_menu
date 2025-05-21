@@ -40,11 +40,17 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        // خزّن البيانات المدخلة مؤقتًا في الـ session
-        session([
-            'order_data' => $request->only(['name', 'phone', 'notes', 'payment_type'])
-        ]);
 
+        $rules = [
+            'name' => 'required',
+            'phone' => 'required',
+            'payment_type' => 'required',
+        ];
+        $messages = [
+            'name.required' => ' من فضلك ادخل الاسم  ',
+            'phone.required' => ' من فضلك ادخل رقم الهاتف  ',
+            'payment_type.required' => ' من فضلك حدد وسيلة الدفع  ',
+        ];
         $transaction_id = uniqid();
         $data = $request->all();
         $user = User::where('phone', $data['phone'])->first();
@@ -57,26 +63,22 @@ class OrderController extends Controller
             return Redirect::back()->withInput()->withErrors('الفرع مغلق في الوقت الحالي');
         }
 
-        $coupon_amount = Session::get('coupon_amount', 0);
-        $coupon = Session::get('coupon_code');
-        $cartItems = Cart::getcartitems();
-        $total_price = Cart::getcarttotal();
-
-        $rules = [
-            'name' => 'required',
-            'phone' => 'required',
-            'payment_type' => 'required',
-        ];
-        $messages = [
-            'name.required' => ' من فضلك ادخل الاسم  ',
-            'phone.required' => ' من فضلك ادخل رقم الهاتف  ',
-            'payment_type.required' => ' من فضلك حدد وسيلة الدفع  ',
-        ];
-
         $validator = Validator::make($data, $rules, $messages);
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withErrors($validator);
         }
+
+        // خزّن البيانات المدخلة مؤقتًا في الـ session
+        session([
+            'order_data' => $request->only(['name', 'phone', 'notes', 'payment_type'])
+        ]);
+
+
+
+        $coupon_amount = Session::get('coupon_amount', 0);
+        $coupon = Session::get('coupon_code');
+        $cartItems = Cart::getcartitems();
+        $total_price = Cart::getcarttotal();
 
         DB::beginTransaction();
         $order = new Order();
@@ -115,7 +117,14 @@ class OrderController extends Controller
             ]);
         }
         DB::commit();
-        return Redirect()->route('payemnt.process', ['amount' => $total_price]);
+
+
+        $payment_type = $request->payment_type;
+        if ($payment_type == 'cash') {
+            return Redirect()->route('thanks');
+        } else {
+            return Redirect()->route('payemnt.process', ['amount' => $total_price]);
+        }
     }
 
     public function paymentProcess(Request $request)

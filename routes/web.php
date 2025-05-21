@@ -44,7 +44,7 @@ Route::controller(CheckoutController::class)->group(function () {
 Route::group(['middleware' => 'auth'], function () {
     Route::controller(OrderController::class)->group(function () {
         Route::post('order/store', 'store');
-        Route::get('thanks', 'thanks');
+        Route::get('thanks', 'thanks')->name('thanks');
         Route::post('/payment/response', 'handlePaymentResponse')->name('payment.response');
         Route::get('/payment-success',  'success')->name('payment.success');
         Route::get('/payment-failed', 'failed')->name('payment.failed');

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 {
     public function account(){
-        $orders = Order::with( 'details')->where("user_id",Auth::user()->id)->get();
+        $orders = Order::with( 'details')->orderBy("id","desc")->where("user_id",Auth::user()->id)->get();
         //dd($orders);
         return view("front.user.dashboard",compact("orders"));
     }
