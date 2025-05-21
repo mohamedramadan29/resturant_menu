@@ -117,16 +117,16 @@
                                     <div class="form-group col-sm-6">
                                         <label> الاسم :</label>
                                         <input required type="text" class="form-control" name="name"
-                                            value="{{ old('name', Auth::user()->name) }}">
+                                            value="{{ old('name', session('order_data.name', Auth::user()->name)) }}">
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label> رقم الهاتف :</label>
                                         <input type="text" class="form-control" name="phone" placeholder="05xxxxxxx"
-                                            value="{{ old('phone', Auth::user()->phone) }}">
+                                            value="{{ old('phone', session('order_data.phone', Auth::user()->phone)) }}">
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label> ملاحظات على طلبك : </label>
-                                        <textarea name="notes" id="" cols="10" rows="4" class="form-control"></textarea>
+                                        <textarea name="notes" id="" cols="10" rows="4" class="form-control">{{ old('notes', session('order_data.notes')) }}</textarea>
                                     </div>
                                 </div>
                                 <h4 class="border-bottom pb-4" style="font-weight: 500"><i

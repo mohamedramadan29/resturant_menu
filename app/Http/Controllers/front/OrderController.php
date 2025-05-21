@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
 use App\Interfaces\PaymentGatewayInterface;
+
 class OrderController extends Controller
 {
     use Message_Trait;
@@ -39,6 +40,11 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
+        // خزّن البيانات المدخلة مؤقتًا في الـ session
+        session([
+            'order_data' => $request->only(['name', 'phone', 'notes', 'payment_type'])
+        ]);
+
         $transaction_id = uniqid();
         $data = $request->all();
         $user = User::where('phone', $data['phone'])->first();
@@ -110,7 +116,6 @@ class OrderController extends Controller
         }
         DB::commit();
         return Redirect()->route('payemnt.process', ['amount' => $total_price]);
-
     }
 
     public function paymentProcess(Request $request)
@@ -141,7 +146,8 @@ class OrderController extends Controller
 
     public function success()
     {
-
+        // إذا نجح الطلب يمكن حذف البيانات المؤقتة
+        session()->forget('order_data');
         // Session::forget('transaction_id');
         // Session::forget('order_id');
         return view('front.payment.success');
