@@ -71,6 +71,7 @@
                                                 @else
                                                     <span class="badge bg-danger"> غير مفعل  </span>
                                                 @endif
+                                                <a href="{{url('admin/main-category/change-status/'.$category['id'])}}" class="btn btn-sm btn-default"> تغيير الحالة </a>
                                             </td>
 
                                             <td>

@@ -49,6 +49,7 @@
                                             <th> السعر </th>
                                             <th> الخصم </th>
                                             <th> الصورة </th>
+                                            <th> حالة النشر </th>
                                             <th> المنتج مميز </th>
                                             <th> العمليات</th>
                                         </tr>
@@ -66,17 +67,26 @@
                                                     {{ $product['name'] }} </td>
                                                 <td> {{ $product['Main_Category']['name'] }} </td>
                                                 <td>
-                                                    @if($product['product_type']== 'simple')
-                                                    {{ $product['price'] }} $
+                                                    @if ($product['product_type'] == 'simple')
+                                                        {{ $product['price'] }} $
                                                     @else
-                                                    منتج متغير
+                                                        منتج متغير
                                                     @endif
-                                                     </td>
+                                                </td>
                                                 <td> {{ $product['discount'] ?? 0 }} $ </td>
                                                 <td>
                                                     <img class="img-thumbnail"
                                                         src="{{ asset('assets/uploads/product_images/' . $product['image']) }}"
                                                         width="80" height="80px" alt="">
+                                                </td>
+                                                <td>
+                                                    @if ($product['status'] == 1)
+                                                        <span class="badge bg-success"> فعال </span>
+                                                    @else
+                                                        <span class="badge bg-danger"> ارشيف </span>
+                                                    @endif
+                                                    <a class="btn btn-sm btn-default" href="{{ route('product.change-status', $product['id']) }}"
+                                                        > تغير الحالة  </a>
                                                 </td>
                                                 <td>
                                                     @if ($product['is_featured'] == 1)

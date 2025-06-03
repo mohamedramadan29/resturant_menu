@@ -105,6 +105,11 @@ class OrderController extends Controller
         Session::put('transaction_id', $transaction_id);
         Session::put('order_id', $order->id);
 
+        #### Update User Table
+
+        $user->name = $data['name'];
+        $user->save();
+
         foreach ($cartItems as $item) {
             OrderDetail::create([
                 'order_id' => $order->id,
@@ -121,8 +126,11 @@ class OrderController extends Controller
 
         $payment_type = $request->payment_type;
         if ($payment_type == 'cash') {
+            $admin = Admin::first();
+            Notification::send($admin, new NewOrder($order->id));
             return Redirect()->route('thanks');
         } else {
+
             return Redirect()->route('payemnt.process', ['amount' => $total_price]);
         }
     }
@@ -157,8 +165,10 @@ class OrderController extends Controller
     {
         // إذا نجح الطلب يمكن حذف البيانات المؤقتة
         session()->forget('order_data');
-        // Session::forget('transaction_id');
-        // Session::forget('order_id');
+        $admin = Admin::first();
+        Notification::send($admin, new NewOrder(Session::get('order_id')));
+        Session::forget('transaction_id');
+        Session::forget('order_id');
         return view('front.payment.success');
     }
     public function failed(Request $request)

@@ -58,6 +58,7 @@ Route::group(['prefix' => 'admin'], function () {
                 Route::get('/get-attribute-values/{attributeId}', 'getAttributeValues');
                 Route::get('/get-subcategories', 'getSubCategories')->name('get.subcategories');
                 Route::post('product/gallary/delete/{id}', 'delete_image_gallary');
+                Route::get('product/change-status/{id}', 'changeStatus')->name('product.change-status');
             });
 
 
@@ -87,6 +88,7 @@ Route::group(['prefix' => 'admin'], function () {
                 Route::match(['post', 'get'], 'main-category/add', 'store');
                 Route::match(['post', 'get'], 'main-category/update/{id}', 'update');
                 Route::post('main-category/delete/{id}', 'delete');
+                Route::get('main-category/change-status/{id}', 'changeStatus')->name('main-category.change-status');
             });
 
             ///////////////////// Start Order Controller ///////////////

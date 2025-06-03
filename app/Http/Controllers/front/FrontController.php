@@ -11,7 +11,7 @@ class FrontController extends Controller
 {
     public  function index()
     {
-        $categories = Category::all()->map(function ($category) {
+        $categories = Category::where('status', 1)->get()->map(function ($category) {
             $category->products = $category->products()->where('status', 1)->latest()->get();
             return $category;
         });

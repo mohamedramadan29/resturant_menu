@@ -152,4 +152,12 @@ class CategoryController extends Controller
         }
     }
 
+    public function changeStatus ($id){
+        $category = Category::findOrFail($id);
+        $category->update([
+            'status' => $category->status == 1 ? 0 : 1,
+        ]);
+        return $this->success_message('تم تغيير حالة القسم بنجاح');
+    }
+
 }

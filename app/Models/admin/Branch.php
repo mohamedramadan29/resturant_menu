@@ -21,8 +21,9 @@ class Branch extends Model
 
     public function isOpen()
     {
-        $currentDay = now()->format('l'); // الحصول على اليوم الحالي
-        $currentTime = now()->format('H:i');
+        $currentDay = now()->format('l'); // اليوم الحالي بالإنجليزية
+        $currentTime = now()->format('H:i'); // التوقيت الحالي (24 ساعة)
+        $currentDateTime = now(); // التاريخ والتوقيت الحالي كامل
 
         $dayMapping = [
             'Saturday' => 'السبت',
@@ -38,7 +39,19 @@ class Branch extends Model
         $hours = $this->hours()->where('day', $dayName)->first();
 
         if ($hours) {
-            return $currentTime >= $hours->open_time && $currentTime <= $hours->close_time;
+            $openTime = $hours->open_time; // مثلاً 15:30
+            $closeTime = $hours->close_time; // مثلاً 01:30
+
+            // إذا كان وقت الإغلاق أقل من وقت الفتح، يعني الإغلاق في اليوم التالي
+            if ($closeTime < $openTime) {
+                // إذا كان التوقيت الحالي بعد وقت الفتح أو قبل وقت الإغلاق في اليوم التالي
+                if ($currentTime >= $openTime || $currentTime <= $closeTime) {
+                    return true;
+                }
+            } else {
+                // إذا كان الفتح والإغلاق في نفس اليوم
+                return $currentTime >= $openTime && $currentTime <= $closeTime;
+            }
         }
 
         return false;

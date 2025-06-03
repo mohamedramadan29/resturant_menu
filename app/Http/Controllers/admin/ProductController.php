@@ -188,6 +188,13 @@ class ProductController extends Controller
         return $this->success_message(' تم حذف المنتج بنجاح  ');
     }
 
+    public function changeStatus($id){
+        $product = Product::findOrFail($id);
+        $product->status = $product->status == 1 ? 0 : 1;
+        $product->save();
+        return $this->success_message(' تم تغيير حالة المنتج بنجاح  ');
+    }
+
     // public function delete_image_gallary($id)
     // {
     //     $imageGallary = ProductGallary::findOrFail($id);
