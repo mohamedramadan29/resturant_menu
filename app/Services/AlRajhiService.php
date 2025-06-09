@@ -39,9 +39,9 @@ class AlRajhiService extends BasePaymentService implements PaymentGatewayInterfa
                 "action" => "1",
                 "currencyCode" => "682",
                 "errorURL" => route('payment.failed'),
-               // "responseURL" => $request->getSchemeAndHttpHost() . "/api/payment/callback",
-               "responseURL" => route('payment.callback'),
-               "trackId" => uniqid(),
+                // "responseURL" => $request->getSchemeAndHttpHost() . "/api/payment/callback",
+                "responseURL" => route('payment.callback'),
+                "trackId" => uniqid(),
                 "amt" => $amount
             ]
         ];
@@ -53,8 +53,8 @@ class AlRajhiService extends BasePaymentService implements PaymentGatewayInterfa
                 "id" => $this->id,
                 "trandata" => $encryptedData,
                 "errorURL" => route('payment.failed'),
-               // "responseURL" => $request->getSchemeAndHttpHost() . "/api/payment/callback",
-               "responseURL" => route('payment.callback'),
+                // "responseURL" => $request->getSchemeAndHttpHost() . "/api/payment/callback",
+                "responseURL" => route('payment.callback'),
             ]
         ];
 
@@ -94,23 +94,38 @@ class AlRajhiService extends BasePaymentService implements PaymentGatewayInterfa
     //✅✅
     public function callBack(Request $request)
     {
-        $tran_data = $this->encryptionService->decrypt($request->get('trandata'));
+        try {
+            \Illuminate\Support\Facades\Log::info('AlRajhi Callback Raw Data:', $request->all());
 
-        $response = urldecode($tran_data);
-        $data = json_decode($response, true);
-        if (isset($data[0]['result']) && $data[0]['result'] === 'CAPTURED') {
+            if (!$request->has('trandata')) {
+                \Illuminate\Support\Facades\Log::error('AlRajhi Callback - No trandata');
+                return false;
+            }
 
-            Storage::put('alrajhi_callback.json', json_encode(
-                [
-                    'callback_response' => $request->all(),
-                    'callback_after_encode' => $data,
-                ]
-            ));
+            $tran_data = $this->encryptionService->decrypt($request->get('trandata'));
+            $response = urldecode($tran_data);
+            $data = json_decode($response, true);
 
-            return true;
+            \Illuminate\Support\Facades\Log::info('AlRajhi Decoded Response:', ['data' => $data]);
+
+            // تخزين بيانات الاستجابة للتدقيق
+            Storage::put('alrajhi_callback.json', json_encode([
+                'callback_response' => $request->all(),
+                'callback_after_decode' => $data
+            ]));
+
+            // التحقق من نجاح العملية
+            if (isset($data[0]['result']) && ($data[0]['result'] === 'CAPTURED' || $data[0]['result'] === 'APPROVED')) {
+                \Illuminate\Support\Facades\Log::info('AlRajhi Payment Success');
+                return true;
+            }
+
+            \Illuminate\Support\Facades\Log::error('AlRajhi Payment Failed - Invalid Result');
+            return false;
+
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('AlRajhi Payment Error:', ['error' => $e->getMessage()]);
+            return false;
         }
-
-        return false;
-
     }
 }

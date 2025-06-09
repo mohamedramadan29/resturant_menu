@@ -36,8 +36,6 @@ class OrderController extends Controller
         $this->paymentGateway = $paymentGateway;
     }
 
-
-
     public function store(Request $request)
     {
 
@@ -72,8 +70,6 @@ class OrderController extends Controller
         session([
             'order_data' => $request->only(['name', 'phone', 'notes', 'payment_type'])
         ]);
-
-
 
         $coupon_amount = Session::get('coupon_amount', 0);
         $coupon = Session::get('coupon_code');
@@ -126,7 +122,7 @@ class OrderController extends Controller
 
         $payment_type = $request->payment_type;
         if ($payment_type == 'cash') {
-            $admin = Admin::first();
+            $admin = Admin::all();
             Notification::send($admin, new NewOrder($order->id));
             return Redirect()->route('thanks');
         } else {
@@ -141,23 +137,44 @@ class OrderController extends Controller
     }
     public function callBack(Request $request): \Illuminate\Http\RedirectResponse
     {
-        $response = $this->paymentGateway->callBack($request);
-        if ($response) {
+        try {
+            \Illuminate\Support\Facades\Log::info('Payment Callback Data:', $request->all());
 
-            // $orderId = Session::get('order_id'); // استرجاع order_id من السيشن
-            // if ($orderId) {
-            //     $order = Order::find($orderId);
-            //     if ($order) {
-            //         $order->payment_status = 'paid';
-            //         $order->save();
-            //     }
-            // }
-            // Session::forget('transaction_id');
-            // Session::forget('order_id');
+            $response = $this->paymentGateway->callBack($request);
+            \Illuminate\Support\Facades\Log::info('Payment Gateway Response:', ['response' => $response]);
 
-            return redirect()->route('payment.success');
+            if ($response) {
+                $orderId = Session::get('order_id');
+                \Illuminate\Support\Facades\Log::info('Order ID from Session:', ['order_id' => $orderId]);
+
+                if ($orderId) {
+                    $order = Order::find($orderId);
+                    if ($order) {
+                        $order->payment_status = 'paid';
+                        $order->save();
+
+                        // إرسال إشعار للأدمن
+                        $admin = Admin::first();
+                        Notification::send($admin, new NewOrder($orderId));
+
+                        // تنظيف سلة المشتريات
+                        Cart::where('user_id', Auth::id())
+                            ->orWhere('session_id', Session::get('session_id'))
+                            ->delete();
+
+                        // حذف بيانات الجلسة
+                        Session::forget(['transaction_id', 'order_id', 'order_data']);
+
+                        return redirect()->route('thanks');
+                    }
+                }
+            }
+            \Illuminate\Support\Facades\Log::error('Payment Failed - Invalid Response');
+            return redirect()->route('payment.failed');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Payment Error:', ['error' => $e->getMessage()]);
+            return redirect()->route('payment.failed');
         }
-        return redirect()->route('payment.failed');
     }
 
 
@@ -165,8 +182,6 @@ class OrderController extends Controller
     {
         // إذا نجح الطلب يمكن حذف البيانات المؤقتة
         session()->forget('order_data');
-        $admin = Admin::first();
-        Notification::send($admin, new NewOrder(Session::get('order_id')));
         Session::forget('transaction_id');
         Session::forget('order_id');
         return view('front.payment.success');

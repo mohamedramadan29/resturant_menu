@@ -98,7 +98,7 @@ class ProductController extends Controller
                 return $this->exception_message($e);
             }
         }
-        return view('admin.products.add', compact('MainCategories'));
+        return view('admin.Products.add', compact('MainCategories'));
     }
 
     public function update(Request $request, $slug)

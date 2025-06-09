@@ -49,6 +49,7 @@
                                     class="table table-bordered gridjs-table align-middle mb-0 table-hover table-centered">
                                     <thead class="bg-light-subtle">
                                         <tr>
+                                            <th> # </th>
                                             <th> رقم الطلب </th>
                                             <th> اسم العميل </th>
                                             <th> رقم الهاتف </th>
@@ -67,6 +68,7 @@
                                                 <td>
                                                     {{ $loop->iteration }}
                                                 </td>
+                                                <td> {{ $order->id }} </td>
                                                 <td> {{ $order['name'] }} </td>
                                                 <td> {{ $order['phone'] }} </td>
 
@@ -94,7 +96,7 @@
                                                         <span class="badge badge-danger bg-danger"> الدفع الالكتروني </span>
                                                     @endif
                                                 </td>
-                                                <td> {{ $order['created_at']->diffForHumans() }} <br> {{ $order['created_at']->format('Y-m-d H:i A') }} </td>
+                                                <td> {{ $order['created_at']->format('Y-m-d H:i A') }} </td>
                                                 <td>
                                                     <div class="d-flex gap-2">
                                                         <a href="{{ url('admin/order/update/' . $order['id']) }}"

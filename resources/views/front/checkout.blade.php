@@ -43,7 +43,7 @@
                                 <table class="cart-table1">
                                     @foreach ($cartItems as $item)
                                         @php
-                                            $total_price = intval($total_price + $item['total_price']);
+                                            $total_price = $total_price + $item['total_price'];
                                         @endphp
                                         <tr>
                                             <td class="title">

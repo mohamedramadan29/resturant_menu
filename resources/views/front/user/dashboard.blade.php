@@ -60,7 +60,7 @@
                                         @else
                                             <span class="badge badge-danger"> الدفع الالكتروني  </span>
                                         @endif </td>
-                                        <td> {{ $order['created_at']->diffForHumans() }} </td>
+                                        <td> {{ $order['created_at']->format('Y-m-d H:i A') }}  </td>
                                         <td>
                                             @foreach ($order['details'] as $detail)
                                                 {{ $detail['product_name'] }} - {{ $detail['product_qty'] }} <br>

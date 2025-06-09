@@ -50,7 +50,7 @@ class CheckoutController extends Controller
         $user = User::where('phone', $phone)->first();
         if ($user) {
             // إذا كان الرمز صحيحًا ولم تنتهِ صلاحيته
-            Auth::login($user); // تسجيل دخول المستخدم
+            Auth::login($user,true); // تسجيل دخول المستخدم
             // تحديث عناصر السلة
             $cartItems = Cart::getcartitems(); // استدعاء عناصر السلة
             // dd($cartItems);
