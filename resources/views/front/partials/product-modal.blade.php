@@ -74,14 +74,19 @@
                          </div>
                      @else
                          <div class="price_section">
-                             @if ($product['discount'] > 0)
+                             @if ($product['discount'] > 0 || $product['discount_percentage'] > 0)
                                  <span class="text-muted">
                                      <s>
                                          <strong>{{ number_format($product['price'], 2) }} </strong>
                                      </s>
                                  </span>
+                                 @if ($product['discount'] > 0)
                                  <strong>{{ number_format($product['price'] - $product['discount'], 2) }}
                                  </strong>
+                                 @else
+                                 <strong>{{ number_format($product['price'] - ($product['price'] * $product['discount_percentage'] / 100), 2) }}
+                                 </strong>
+                                 @endif
                                  <img loading="lazy" src="{{ asset('assets/uploads/riyal.svg') }}" width="15">
                              @else
                                  <strong>{{ number_format($product['price'], 2) }} </strong>

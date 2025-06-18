@@ -75,6 +75,7 @@ class ProductController extends Controller
                 $product->description = $data['description'];
                 $product->price = $data['price'];
                 $product->discount = $data['discount'];
+                $product->discount_percentage = $data['discount_percentage'];
                 $product->meta_title = $data['meta_title'];
                 $product->meta_keywords = $data['meta_keywords'];
                 $product->meta_description = $data['meta_description'];
@@ -143,6 +144,8 @@ class ProductController extends Controller
                 $product->short_description = $data['short_description'];
                 $product->description = $data['description'];
                 $product->price = $data['price'];
+                $product->discount = $data['discount'];
+                $product->discount_percentage = $data['discount_percentage'];
                 $product->meta_title = $data['meta_title'];
                 $product->meta_keywords = $data['meta_keywords'];
                 $product->meta_description = $data['meta_description'];

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->longText('description')->nullable();
             $table->double('price', 8, 2)->nullable();
             $table->double('discount', 8, 2)->nullable();
+            $table->double('discount_percentage',8,2)->nullable();
             $table->boolean('status')->default(1);
             $table->string('meta_title')->nullable();
             $table->string('meta_description')->nullable();

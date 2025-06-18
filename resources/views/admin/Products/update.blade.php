@@ -154,11 +154,20 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
-                                            <label for="product-price" class="form-label"> اضافة خصم </label>
+                                            <label for="product-price" class="form-label"> اضافة خصم <span class='badge badge-danger bg-danger'> رقم ثابت  </span> </label>
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
                                                 <input type="number" id="discount" name="discount" class="form-control"
                                                     placeholder="000" value="{{ $product['discount'] }}">
+                                            </div>
+                                        </div>
+                                        <span class="badge badge-danger bg-danger"> او  </span>
+                                        <div class="col-lg-6">
+                                            <label for="product-price" class="form-label"> اضافة خصم <span class='badge badge-danger bg-danger'> ٪ نسبة  </span></label>
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text fs-20"><i class='bx bx-percentage'></i></span>
+                                                <input step="0.01" type="number" id="discount_percentage" name="discount_percentage"
+                                                    class="form-control" placeholder="" value="{{ $product['discount_percentage'] }}">
                                             </div>
                                         </div>
                                     </div>

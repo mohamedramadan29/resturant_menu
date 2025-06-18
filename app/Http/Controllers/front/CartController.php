@@ -29,8 +29,12 @@ class CartController extends Controller
         $cartData = $request->all();
         $product_id = $request->input('product_id');
         $product = Product::find($product_id);
-        if ($product->discount > 0) {
-            $price = $product->price - $product->discount;
+        if ($product->discount > 0 || $product->discount_percentage > 0) {
+            if ($product->discount > 0) {
+                $price = $product->price - $product->discount;
+            } else {
+                $price = $product->price - ($product->price * $product->discount_percentage / 100);
+            }
         } else {
             $price = $product->price;
         }
@@ -41,8 +45,12 @@ class CartController extends Controller
         if ($request->has('size')) {
             $vartion = ProductVariation::where('id', $request->input('size'))->first();
             $vartion_price = $vartion->price;
-            if ($vartion->discount > 0) {
-                $price = $vartion->price - $vartion->discount;
+            if ($vartion->discount > 0 || $vartion->discount_percentage > 0) {
+                if ($vartion->discount > 0) {
+                    $price = $vartion->price - $vartion->discount;
+                } else {
+                    $price = $vartion->price - ($vartion->price * $vartion->discount_percentage / 100);
+                }
             } else {
                 $price = $vartion->price;
             }
