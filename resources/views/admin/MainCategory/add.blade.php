@@ -36,7 +36,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-4">
 
                                         <div class="mb-3">
                                             <label for="name" class="form-label"> عنوان القسم </label>
@@ -46,7 +46,7 @@
 
                                     </div>
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-4">
                                         <label for="crater" class="form-label"> حالة التفعيل </label>
                                         <select required name="status" class="form-control" id="crater" data-choices
                                                 data-choices-groups data-placeholder="Select Crater">
@@ -54,6 +54,15 @@
                                             <option value="1">مفعل</option>
                                             <option value="0">غير مفعل</option>
                                         </select>
+                                    </div>
+                                    <div class="col-lg-4">
+
+                                        <div class="mb-3">
+                                            <label for="ordering" class="form-label"> رقم القسم في الواجهة  </label>
+                                            <input required type="number" id="ordering" class="form-control" name="ordering"
+                                                   value="{{old('ordering')}}">
+                                        </div>
+
                                     </div>
                                     <div class="col-lg-12">
                                         <div class="mb-0">

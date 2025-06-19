@@ -56,6 +56,7 @@ class CategoryController extends Controller
                     $new_category->meta_description = $alldata['meta_description'];
                     $new_category->meta_keywords = $alldata['meta_keywords'];
                     $new_category->image = $file_name;
+                    $new_category->ordering = $alldata['ordering'];
                     $new_category->save();
                     return $this->success_message(' تمت اضافة القسم بنجاح ');
                 } catch (\Exception $e) {
@@ -109,6 +110,7 @@ class CategoryController extends Controller
                     "meta_title" => $alldata['meta_title'],
                     "meta_description" => $alldata['meta_description'],
                     "meta_keywords" => $alldata['meta_keywords'],
+                    "ordering" => $alldata['ordering'],
                 ]);
                 return $this->success_message(' تم تعديل القسم بنجاح  ');
             } catch (\Exception $e) {
