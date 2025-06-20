@@ -38,7 +38,6 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-
         $rules = [
             'name' => 'required',
             'phone' => 'required',
@@ -50,7 +49,12 @@ class OrderController extends Controller
             'payment_type.required' => ' من فضلك حدد وسيلة الدفع  ',
         ];
         $transaction_id = uniqid();
+        $track_id = uniqid();
+        Session::put('track_id', $track_id);
         $data = $request->all();
+        if(!Auth::check()){
+            return to_route('index');
+        }
         $user = User::where('phone', $data['phone'])->first();
         $user_branch = UserBranchDetail::where('user_id', $user->id)->first();
         if (!$user_branch) {
@@ -60,7 +64,6 @@ class OrderController extends Controller
         if ($branch->isOpen() == false) {
             return Redirect::back()->withInput()->withErrors('الفرع مغلق في الوقت الحالي');
         }
-
         $validator = Validator::make($data, $rules, $messages);
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withErrors($validator);
@@ -96,6 +99,7 @@ class OrderController extends Controller
         $order->car_plate = $user_branch->car_plate ?? null;
         $order->car_color = $user_branch->car_color ?? null;
         $order->car_model = $user_branch->car_model ?? null;
+        $order->track_id = $track_id;
         $order->save();
         // خزّن الـ transaction_id أو order_id في السيشن
         Session::put('transaction_id', $transaction_id);
@@ -126,56 +130,77 @@ class OrderController extends Controller
             Notification::send($admin, new NewOrder($order->id));
             return Redirect()->route('thanks');
         } else {
-
-            return Redirect()->route('payemnt.process', ['amount' => $total_price]);
+            return Redirect()->route('payemnt.process', ['amount' => $total_price,'order_id'=>$order->id]);
         }
     }
 
     public function paymentProcess(Request $request)
     {
         return $this->paymentGateway->sendPayment($request);
+
     }
+
     public function callBack(Request $request): \Illuminate\Http\RedirectResponse
     {
-        try {
-            \Illuminate\Support\Facades\Log::info('Payment Callback Data:', $request->all());
-
-            $response = $this->paymentGateway->callBack($request);
-            \Illuminate\Support\Facades\Log::info('Payment Gateway Response:', ['response' => $response]);
-
-            if ($response) {
-                $orderId = Session::get('order_id');
-                \Illuminate\Support\Facades\Log::info('Order ID from Session:', ['order_id' => $orderId]);
-
-                if ($orderId) {
-                    $order = Order::find($orderId);
-                    if ($order) {
-                        $order->payment_status = 'paid';
-                        $order->save();
-
-                        // إرسال إشعار للأدمن
-                        $admin = Admin::first();
-                        Notification::send($admin, new NewOrder($orderId));
-
-                        // تنظيف سلة المشتريات
-                        Cart::where('user_id', Auth::id())
-                            ->orWhere('session_id', Session::get('session_id'))
-                            ->delete();
-
-                        // حذف بيانات الجلسة
-                        Session::forget(['transaction_id', 'order_id', 'order_data']);
-
-                        return redirect()->route('thanks');
-                    }
-                }
+        $response = $this->paymentGateway->callBack($request);
+        if ($response) {
+            if (isset($response[0]['result']) && $response[0]['result'] === 'CAPTURED') {
+             // dd($response);
+             $trackId = $response[0]['trackId'];
+             $order = Order::where('track_id', $trackId)->first();
+             $order->update([
+                 'payment_status' => 'paid',
+             ]);
+             $admin = Admin::all();
+             Notification::send($admin, new NewOrder($order->id));
+             return redirect()->route('thanks');
             }
-            \Illuminate\Support\Facades\Log::error('Payment Failed - Invalid Response');
-            return redirect()->route('payment.failed');
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Payment Error:', ['error' => $e->getMessage()]);
             return redirect()->route('payment.failed');
         }
+        return redirect()->route('payment.failed');
     }
+
+    // public function callBack(Request $request): \Illuminate\Http\RedirectResponse
+    // {
+    //     try {
+    //         \Illuminate\Support\Facades\Log::info('Payment Callback Data:', $request->all());
+
+    //         $response = $this->paymentGateway->callBack($request);
+    //         \Illuminate\Support\Facades\Log::info('Payment Gateway Response:', ['response' => $response]);
+
+    //         if ($response) {
+    //             $orderId = Session::get('order_id');
+    //             \Illuminate\Support\Facades\Log::info('Order ID from Session:', ['order_id' => $orderId]);
+
+    //             if ($orderId) {
+    //                 $order = Order::find($orderId);
+    //                 if ($order) {
+    //                     $order->payment_status = 'paid';
+    //                     $order->save();
+
+    //                     // إرسال إشعار للأدمن
+    //                     $admin = Admin::first();
+    //                     Notification::send($admin, new NewOrder($orderId));
+
+    //                     // تنظيف سلة المشتريات
+    //                     Cart::where('user_id', Auth::id())
+    //                         ->orWhere('session_id', Session::get('session_id'))
+    //                         ->delete();
+
+    //                     // حذف بيانات الجلسة
+    //                     Session::forget(['transaction_id', 'order_id', 'order_data']);
+
+    //                     return redirect()->route('thanks');
+    //                 }
+    //             }
+    //         }
+    //         \Illuminate\Support\Facades\Log::error('Payment Failed - Invalid Response');
+    //         return redirect()->route('payment.failed');
+    //     } catch (\Exception $e) {
+    //         \Illuminate\Support\Facades\Log::error('Payment Error:', ['error' => $e->getMessage()]);
+    //         return redirect()->route('payment.failed');
+    //     }
+    // }
 
 
     public function success()

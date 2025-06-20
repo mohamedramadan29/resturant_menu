@@ -46,12 +46,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('order/store', 'store');
         Route::get('thanks', 'thanks')->name('thanks');
         Route::post('/payment/response', 'handlePaymentResponse')->name('payment.response');
-        Route::get('/payment-success',  'success')->name('payment.success');
+       Route::get('/payment-success',  'success')->name('payment.success');
         Route::get('/payment-failed', 'failed')->name('payment.failed');
 
         Route::get('/payment/process', 'paymentProcess')->name('payemnt.process');
         //Route::match(['GET', 'POST'], '/payment/callback', 'callBack');
-        Route::match(['GET', 'POST'], '/payment/callback', 'callBack')->name('payment.callback');
+      //  Route::match(['GET', 'POST'], '/payment/callback', 'callBack')->name('payment.callback');
 
     });
 
@@ -84,6 +84,9 @@ Route::controller(SetBranchController::class)->group(function () {
     Route::post('/setBranchSession', 'setBranchSession')->name('setBranchSession');
     // Route::get('/getBranchSession', 'getBranchSession')->name('getBranchSession');
 });
+
+//Route::get('/payment-success', [testpaymentcontroller::class, 'success'])->name('payment.success');
+///Route::get('/payment-failed', [testpaymentcontroller::class, 'failed'])->name('payment.failed');
 
 
 include 'admin.php';

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services;
+
 class AlRajhiEncryptionService
 {
     private $key;
@@ -11,6 +12,7 @@ class AlRajhiEncryptionService
         $this->key = env("ARAJHI_ENCRYPTION_KEY");
         $this->iv = env("ARAJHI_IV");
     }
+
     /**
      * Encrypt data using AES-256-CBC
      */

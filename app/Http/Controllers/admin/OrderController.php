@@ -26,6 +26,14 @@ class OrderController extends Controller
             $query->whereBetween('created_at', [$request->from_date . ' 00:00:00', $request->to_date . ' 23:59:59']);
         }
 
+        $query->where(function($order){
+            $order->where('payment_method','cash')
+            ->orWhere(function($subquery){
+                $subquery->where('payment_method','online')
+                ->where('payment_status','paid');
+            });
+        });
+
         $orders = $query->get();
 
         return view('admin.orders.index', compact('orders'));

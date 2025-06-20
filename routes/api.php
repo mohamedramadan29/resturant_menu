@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\front\OrderController;
 use App\Http\Controllers\testpaymentcontroller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,5 +24,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Broadcast::routes(['middleware' => ['auth:admin']]);
 
-Route::post('/payment/process', [testpaymentcontroller::class, 'paymentProcess']);
-Route::match(['GET', 'POST'], '/payment/callback', [testpaymentcontroller::class, 'callBack']);
+Route::post('/payment/process', [OrderController::class, 'paymentProcess']);
+Route::match(['GET','POST'],'/payment/callback', [OrderController::class, 'callBack']);
