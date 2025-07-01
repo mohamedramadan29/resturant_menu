@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Session;
 
 Route::controller(FrontController::class)->group(function () {
     Route::get('/', 'index')->name('index');
+    Route::get('/menu', 'menu')->name('menu');
 });
 Route::controller(CartController::class)->group(function () {
     Route::get('cart', 'cart');

@@ -18,4 +18,14 @@ class FrontController extends Controller
         // dd($categories);
         return view('front.index', compact('categories'));
     }
+
+    public function menu()
+    {
+        $categories = Category::where('status', 1)->orderby('ordering', 'asc')->get()->map(function ($category) {
+            $category->products = $category->products()->where('status', 1)->latest()->get();
+            return $category;
+        });
+        // dd($categories);
+        return view('front.menu', compact('categories'));
+    }
 }
